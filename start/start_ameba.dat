@@ -25,7 +25,7 @@ n
 //***OBS.: Even if you chose [n], write below both the path and 
 //folder's name where you want to store your results:
 
-C:\MsCV\mscvnla\grids\resultados
+/home/arturcastiel/projetos/uMsCV/resultados
 
 //Write below either a number or any other key word to feature the 
 //folder where the results will be stored:
@@ -283,15 +283,15 @@ y
 
 //If [y], write below the path where the mesh file is:
  
-C:\MsCV\mscvnla\grids
+/home/arturcastiel/projetos/uMsCV/grids
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-ameba2.msh
+ameba4.msh
 
 //If [n], write below the path where the geometry file is:  
 
-C:\MsCV\mscvnla\grids
+/home/arturcastiel/projetos/uMsCV/grids
 
 //Write below the name of the geometry file. Use the extension *.geo.
 

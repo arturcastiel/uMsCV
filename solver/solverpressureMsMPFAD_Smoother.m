@@ -29,7 +29,7 @@ auxflag = 0;
 % %OP_old
 OR  = genRestrictionOperator(size(elem,1), npar);
 if OP_old == -1;
-    OP =  genProlongationOperator(OR', TransFc, 2/3,1300);
+    OP =  genProlongationOperator(OR', TransFc, 2/3,4000);
 else
     OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
 end
@@ -48,7 +48,7 @@ end
 A = TransF; b = F;
 ac = OR * A * OP; 
 bc = OR * b; 
-%% Solução multiescala
+%% Soluï¿½ï¿½o multiescala
 pc = ac\bc;
 pd = OP*pc;
 %% Suavizador
@@ -61,7 +61,7 @@ if strcmp(flagSuavizador, 'on')
         S = (D+Wf*L);
 %         M = (D+Wf*L);
 
-        if strcmp(suavizador, '2_níveis')
+        if strcmp(suavizador, '2_nï¿½veis')
             ac1 = OR * A * OP;
             L1 = tril(ac1, -1) ;
             U1 = triu(ac1,  1) ;
@@ -77,14 +77,14 @@ if strcmp(flagSuavizador, 'on')
         S = ilu(A);
         
    
-        if strcmp(suavizador, '2_níveis')
+        if strcmp(suavizador, '2_nï¿½veis')
             Sc = ilu(ac); % Suavizador na escala coarse
             Sf = ilu(A); % Suavizador na escala fina
         end
     end
 %% Testar esses depois
-% [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S); % função do próprio Matlab
-% [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % função do próprio matlab
+% [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S); % funï¿½ï¿½o do prï¿½prio Matlab
+% [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % funï¿½ï¿½o do prï¿½prio matlab
 %%
 if size(wells,2) > 1
   pd(wells(ref,1)) = wells(ref,end);
@@ -104,11 +104,11 @@ while max(abs(rf)) > tol
         dpf = OP * dpc; 
         pff = pf + dpf;
         rff = b - A * pff;
-    %---------Etapa de Suavização---------
+    %---------Etapa de Suavizaï¿½ï¿½o---------
 
             pf = pff + S\rff;
       
-    elseif strcmp(MetodoSuavizador, 'S_2_níveis')
+    elseif strcmp(MetodoSuavizador, 'S_2_nï¿½veis')
 
        pf3 = pf + Sf\(b - A*pf);
        pf2 = pf3 + OP*(Sc\OR)*(b - A*pf3); 

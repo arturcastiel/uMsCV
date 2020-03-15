@@ -5,8 +5,8 @@ LengX = PPP(1);
 LengY = PPP(2);
 %% config aqui
 %6 e 17
-numX = 8;
-numY = 8;
+numX = 5;
+numY = 5;
 
 % for a hexagonal mesh
 Side = 0.125/2;

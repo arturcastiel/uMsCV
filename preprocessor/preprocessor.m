@@ -10,7 +10,7 @@
 %Criate date: 30/11/2011
 %Modify data: 11/01/2014
 %Advisor: Paulo Lyra and Darlan Karlo
-%Programer: Márcio Souza; Luiz Eduardo; Tulio Cavalcante; Artur Castiel
+%Programer: Mï¿½rcio Souza; Luiz Eduardo; Tulio Cavalcante; Artur Castiel
 %--------------------------------------------------------------------------
 %Goals:
 %The main goal of this numerical routine is the creation of a mesh in a...
@@ -1674,11 +1674,12 @@ disp('wells properties were generated!');
 
 %script to work with structured meshes
 centConstr = [];
-partionMethod = 1;
+partionMethod = 0;
 
 %partion center == 1, use the center of the coarse element
 % partion center == 2, calculate the centroid
- 
+
+splitFlag = 0;
 partionCenter = 2;
 
  if partionMethod == 1

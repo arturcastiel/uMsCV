@@ -183,34 +183,36 @@ if meshtype == true
     end
     clear auxmat
     %% splitting edges on the boarder 
-    for ii=1:npar
-        t = size(exinterface{ii});
-        for jj = 1:t(1)
-            ref = exinterface{ii}(jj);
-            p1 = coord(bedge(ref,1),1:2);
-            p2 = coord(bedge(ref,2),1:2);
-            dx = p1(1) - p2(1);
-            dy = p1(2) - p2(2); 
-            if (dy == 0) & (p1(2) == 0) & (p2(2) == 0) 
-            % case edge lays on the bottom
-                fp = 4;
-            elseif (dy == 0) & (p1(2) ~= 0) & (p2(2) ~= 0) 
-            % case edge lays on top
-                fp = 2;
-            elseif (dx == 0) & (p1(1) == 0) & (p2(1) == 0) 
-            % case edge lays on the left
-                fp = 3;
-            else
-            % case edge lays on the right
-                fp = 1;                               
-            end
-      
-            exinterfaceaxes{ii,fp} = [exinterfaceaxes{ii,fp} ; ref];
-            exinterfaceaxes{ii,fp} = unique(exinterfaceaxes{ii,fp});
-        end
-        
-    end
     
+    if splitFlag == 1
+        for ii=1:npar
+            t = size(exinterface{ii});
+            for jj = 1:t(1)
+                ref = exinterface{ii}(jj);
+                p1 = coord(bedge(ref,1),1:2);
+                p2 = coord(bedge(ref,2),1:2);
+                dx = p1(1) - p2(1);
+                dy = p1(2) - p2(2);
+                if (dy == 0) & (p1(2) == 0) & (p2(2) == 0)
+                    % case edge lays on the bottom
+                    fp = 4;
+                elseif (dy == 0) & (p1(2) ~= 0) & (p2(2) ~= 0)
+                    % case edge lays on top
+                    fp = 2;
+                elseif (dx == 0) & (p1(1) == 0) & (p2(1) == 0)
+                    % case edge lays on the left
+                    fp = 3;
+                else
+                    % case edge lays on the right
+                    fp = 1;
+                end
+                
+                exinterfaceaxes{ii,fp} = [exinterfaceaxes{ii,fp} ; ref];
+                exinterfaceaxes{ii,fp} = unique(exinterfaceaxes{ii,fp});
+            end
+            
+        end
+    end
     
     %% collecting data on the number of interfaces and calculating the centers and its distances
 %     numinterface = zeros([npar 1]);
@@ -239,7 +241,7 @@ if meshtype == true
         end
     end
     
-
+if splitFlag == 1
     for ii= 1:npar
         acum = 0;
         for jj = 1:4
@@ -255,8 +257,23 @@ if meshtype == true
         end
         numinterface(ii) = numinterface(ii) + acum;
     end
+else
+    for ii= 1:npar
+        acum = 0;
+        if ~isempty(exinterface{ii})
+            if ii == 18
+                1
+            end
+            point = centerinterface(exinterface{ii},bedge, coord,elemloc);
+            intCoord = [intCoord ; point , 3 , ii, -1,0];
+            interfacecenter{ii} = [interfacecenter{ii};indexCoord];
+            indexCoord = indexCoord + 1;
+            acum = acum + 1;
+        end
+        numinterface(ii) = numinterface(ii) + acum;
+    end
     
-
+end
     
     
     %% Matrix that says which element is neighbor to which
@@ -269,6 +286,15 @@ if meshtype == true
         end
     end
     
+    
+    if splitFlag ~= 1
+        for ii=1:npar
+                if ~isempty(exinterface{ii})
+                    coarseneigh(ii,npar+1) = coarseneigh(ii,npar+1) +1;
+                end
+        end
+    end
+        
     coarseneigh = any(coarseneigh,3);
     %%checking if neighbors share at least a single point
     %substituir por coarsedge
@@ -369,16 +395,8 @@ if multiCC == 1
                 else
                     %disp('entrou aqui');
 
-                    point = centerinterface(exinterface{ii},bedge, coord,elemloc);
-
-                    
-                end
-               
-            
-            
-            
-            
-            
+                    point = centerinterface(exinterface{ii},bedge, coord,elemloc);              
+                end      
             end
             
             intCoord = [intCoord ; point , 1 , ii, 0,0] ;

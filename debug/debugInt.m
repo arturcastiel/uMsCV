@@ -34,5 +34,5 @@ meshplot(elem(boundRegion{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:)
 %   end
 %   
   for ii = 1:npar
-     meshplot(elem(coarseElemCenter(ii),1:4), coord(:,1), coord(:,2),'color',colormat(2,:), 'LineWidth' , 2.1);
+     meshplot(elem(coarseElemCenter(ii),1:4), coord(:,1), coord(:,2),'color',colormat(200,:), 'LineWidth' , 2.1);
   end

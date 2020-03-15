@@ -5,16 +5,6 @@
 
 %% Main File Start Up
 %  Declare all global variables to be used in the code
-nameFile = 'start_linear.dat';
-prepareStart
-multiscale = 'on';
-smetodo = 'FOU'
-%Globals2D_CPR;
-
-global osMode 
-osMode = 'linux';
-
-
 global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     normals esureface1 esureface2 esurefull1 esurefull2 elemarea dens visc...
     satlimit pormap bcflag courant totaltime numcase oneNodeEdges keypath2 foldername...
@@ -23,7 +13,17 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem
+    coarseedge ordem splitFag
+nameFile = 'start_linear.dat';
+nameFile = 'start_ameba.dat';
+splitFlag = 0;
+prepareStart
+multiscale = 'on';
+smetodo = 'FOU'
+%Globals2D_CPR;
+global osMode 
+osMode = 'linux';
+
 %% Tolerance Settings
 tol_c = 0.00001; flagboundcoarse = 0;
 
@@ -103,7 +103,7 @@ if ~isempty(semiEdges)
 % %% Alternative Multiscale Preprocessor 
 tic;
  [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
-     dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC);
+     dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag);
 toc;
 
 end

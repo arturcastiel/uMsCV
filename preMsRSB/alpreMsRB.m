@@ -1,5 +1,5 @@
 function [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary,H, outSupport , ...
-    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC)    
+    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 %finding neighbors 
@@ -41,11 +41,15 @@ coarseElemCenter = zeros(npar,1);
         for ii = 1:npar
            int_sum = sum(coarseneigh(ii,end-3:end));
            if int_sum == 1
-               ref = (intCoord(:,3) == 3) & (intCoord(:,4) == ii);
-               point = intCoord(ref,1:2);
+%                ref = (intCoord(:,3) == 3) & (intCoord(:,4) == ii);
+%                point = intCoord(ref,1:2);
                cref = elemloc == ii;
+               point = centerinterface(exinterface{ii} ,bedge, coord,elemloc);
+
                cref(cref) = minDis(point, centelem(cref,1:2));
                coarseElemCenter(ii) = find(cref);               
+           
+     
            elseif int_sum ==2
                ref = (intCoord(:,3) == 4) & (intCoord(:,4) == ii);
                point = intCoord(ref,1:2);
@@ -151,7 +155,13 @@ coarseElemCenter = zeros(npar,1);
                 p2 = centelem(target,1:2);                
                 easy_dist = all(ismember( inedge(:,3:4), find(lineCross(1:size(elem,1), p1,p2))),2);
                 ldist = dist;
-                ldist(easy_dist) = ldist(easy_dist) * 0.001;       
+                ldist(easy_dist) = ldist(easy_dist) * 0.001;   
+                cnflag1 = sum(coarseneigh(coarse_element_bridge(jj,1),npar+1));
+                cnflag2 = sum(coarseneigh(coarse_element_bridge(jj,2),npar+1));
+                if (splitFlag ~=1) && (cnflag1 == 1) && (cnflag2 == 1)
+                    easy_dist = all(ismember(inedge(:,3:4), find(any(ismember(elem(:,1:4), unique(bedge(:,1:2))),2))),2);
+                    ldist(easy_dist) = ldist(easy_dist) * 0.00001;  
+                end
                 G = graph(auxmat(:,1), auxmat(:,2), ldist(edge_ref));
                 path = shortestpath(G, transback(center), transback(target));
                 path = transvec(path);
@@ -174,7 +184,8 @@ if bcflag == 0
             center = coarseElemCenter(ii);
             target = boundaryTarget(ii);
             p1 = centelem(center,1:2);
-            p2 = centelem(target,1:2);                
+            p2 = centelem(target,1:2);  
+            
             easy_dist = all(ismember( inedge(:,3:4), find(lineCross(1:size(elem,1), p1,p2))),2);
             ldist = dist;
             ldist(easy_dist) = ldist(easy_dist) * 0.001;       

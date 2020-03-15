@@ -32,7 +32,7 @@ n
 //***OBS.: If you set "0", the folder "Results" and other will be 
 //created into folder set above:
 
-linearcase
+Ameba
 
 //--------------------------------------------------------------------
 //------------------------ Solver Properties -------------------------
@@ -287,7 +287,7 @@ y
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-linear75.msh
+ameba4.msh
 
 //If [n], write below the path where the geometry file is:  
 
@@ -583,11 +583,9 @@ n
 //(Dirichlet, Neumann or Periodic);
 //3. In the same row, put the algebric value of this BC.  
 
-4
-101 1
-102 0
+1
 201 0
-202 0
+
 
 
 //--------------------------------------------------------------------
@@ -599,9 +597,8 @@ n
 //2. In another row, the sequence of codes to be associated with 
 //each point group. 
 
-2
-101
-102
+1
+201
 
 //--------------------------------------------------------------------
 //----------------------- Convergence Criteria -----------------------
@@ -676,9 +673,31 @@ pvi
 //if you write "0" replacing the number of wells, it will be not 
 //necessary to erase the numbers below. Keep it to reference.  
 
-
+//
+0
+1 0 0 0.05 0 0 501 1 1
+1 1 1 0.05 0 0 502 0 0
 
 0
+1 0 0 0.05 301 1 0 1 1
+1 1 1 0.05 0 0 501 0 1
+
+//
+2
+1 0 0 0.05 301 1 0 1 1
+1 1 1 0.05 0 0 501 0 1
+
+//
+2
+1 0 0 0.05 301 1 0 1 0.5
+1 1 1 0.05 0 0 501 1 1
+
+//
+2
+1 0 0 0.05 0 0 501 1 1
+1 1 1 0.05 0 0 502 0 0
+
+//
 1 0 0 0.05 301 1 0 1 1
 1 1 1 0.05 0 0 501 1 0
 

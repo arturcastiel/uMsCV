@@ -5,7 +5,17 @@ colormat = load('color.dat');
 disp('Plotando Coarse Mesh')
 figHandle = figure;
 figure(figHandle);
-set(figHandle, 'Position', [0 0 700 700])
+
+xSize = max(coord(:,1));
+ySize = max(coord(:,2));
+
+mxSize = min(coord(:,1));
+mySize = min(coord(:,2));
+xp = xSize - mxSize;
+yp = ySize - mySize;
+
+ratio = xp/yp;
+set(figHandle, 'Position', [0 0 700 700/ratio])
 text = num2str(npar);
 set(figHandle, 'name', ['Coarse Mesh: ', text ,' coarse cells'],'NumberTitle','off');
 %title(['\fontsize{16}black {\color{magenta}magenta '...
@@ -28,9 +38,9 @@ for num = 1: npar
     
 end
 
-xSize = max(coord(:,1));
-ySize = max(coord(:,2));
+
+
     title(['Coarse Mesh: ', text ,' coarse cells'],'FontSize', 14)
     whitebg('black')
-    xlim([0 xSize])
-    ylim([0 ySize])
+    xlim([mxSize xSize])
+    ylim([mySize ySize])
