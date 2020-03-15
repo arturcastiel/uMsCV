@@ -27,9 +27,7 @@
 function [coord,centelem,elem,esurn1,esurn2,nsurn1,nsurn2,bedge,inedge,...
     normals,esureface1,esureface2,esurefull1,esurefull2,elemarea,dens,visc,...
     satlimit,pormap,bcflag,courant,totaltime,numcase,phasekey,kmap,wells,elemloc,npar,coarseelem ,ghostelem,...
-    coarseedge,intinterface,exinterface ,exinterfaceaxes,numinterface, interfacecenter,...
-    coarseblockcenter, coarseneigh , intCoord, multiCC, coarseningRatio ,semiEdges,bedgeNode, ...
-    pmethod,mshfile, edgesOnCoarseBoundary,oneNodeEdges,pointloc,pointWeight, regularEdges , keymsfv,interptype,keypath1,smethod,xyrz,r0,symaxe,coarseratio,auxcvfactor,...
+    multiCC, pmethod,mshfile, keymsfv,interptype,keypath1,smethod,xyrz,r0,symaxe,coarseratio,auxcvfactor,...
     nonlinparam,multdopt,goefreeopt,order,timeorder,recovtype,lsneightype,...
     lsexp,keygravity,g,keycapil,ncaplcorey,mainpath,resfolder,benchkey,...
     klb,limiterflag,rowposit] = preprocessor 
@@ -1672,43 +1670,6 @@ disp('wells properties were generated!');
 %pre allocating space for multiscale data 
 %ativar aqui
 
-%script to work with structured meshes
-centConstr = [];
-partionMethod = 0;
-
-%partion center == 1, use the center of the coarse element
-% partion center == 2, calculate the centroid
-
-splitFlag = 0;
-partionCenter = 2;
-
- if partionMethod == 1
-   partionMesh 
-   coarseelem = cell(npar,1);
-   numElemtmp = 1: size(elem,1);
-   
-   for ll = 1:npar
-      coarseelem{ll} = numElemtmp (elemloc(:) == ll) ; 
-       
-   end
-end
-
-coarseedge = cell(npar,1);
-intinterface = cell(npar,npar);
-exinterface = cell(npar,1);
-exinterfaceaxes = cell(npar,4);
-numinterface = zeros([npar 1]);
-interfacecenter = cell([npar,1]);
-coarseblockcenter = zeros([npar 1]);
-coarseneigh = zeros([npar npar+4]);
-intCoord = [];
-coarseningRatio = [];
-intDist = zeros(npar,npar);
-
-
-
-%script that get multiscale properties for multiscale meshes
-getmultiscale;
 %Jump a line
 disp(' ');
 %Final message
