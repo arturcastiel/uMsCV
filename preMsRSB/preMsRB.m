@@ -6,7 +6,7 @@ function [ intRegion ,  boundRegion, GlobalBoundary, H, outSupport, ...
 %finding neighbors 
 global intCoord elem coord inedge bedge esurn1 esurn2 elemloc edgesOnCoarseBoundary
 
-
+multiCC = 2;
 coarseElemCenter = zeros([npar 1]);
 for ii = 1:npar
    
@@ -21,7 +21,7 @@ for ii = 1:npar
         1+1;
     end
     
-    %modificação dia 26 - 01
+    %modificaï¿½ï¿½o dia 26 - 01
     %flag 
     vep =  minValues(distance,6);
     

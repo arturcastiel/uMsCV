@@ -1,5 +1,5 @@
 function [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary,H, outSupport , ...
-    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
+    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, coarse_element_bridge,  coarse_element_target] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 %finding neighbors 
@@ -34,7 +34,7 @@ coarseElemCenter = zeros(npar,1);
     
     
 %% moving centers to comply with lorens bc    
-    %bcflag = true;
+    bcflag = true;
     
     if bcflag == 1
         % moving center of coarse volumes

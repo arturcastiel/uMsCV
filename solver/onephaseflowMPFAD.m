@@ -19,6 +19,7 @@ nflagno= contflagnoN(bedge);
 wsdynamic = dynamic(pointWeight);
 [ TransF, F ] = assemblyOnePhaseMPFAD( w,s, Kde, Ded, Kn, Kt, nflagno, Hesq);
 
+po = TransF\F
 
 auxflag = 0;
 

@@ -1,7 +1,7 @@
 function [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, ...
     multiCC,coarseningRatio, semiEdges,bedgeNode, edgesOnCoarseBoundary,oneNodeEdges, ...
-    pointloc,pointWeight,regularEdges] = prems(meshtype, splitFlag,partionCenter, multiCC)
+    pointloc,pointWeight,regularEdges] = prems(meshtype, splitFlag,partionMethod, partionCenter, multiCC)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 %--------------------------------------------------------------------------
@@ -155,8 +155,8 @@ global flagboundcoarse elem inedge bedge elemloc coord npar
 
 %script to work with structured meshes
 centConstr = [];
-partionMethod = 0;
-
+% partionMethod = 0;
+multiCC = 2;
 %partion center == 1, use the center of the coarse element
 % partion center == 2, calculate the centroid
 
@@ -164,6 +164,8 @@ partionCenter = 2;
 
 if partionMethod == 1
     partionMesh
+elseif partionMethod == 2
+    gridpartition
 end
 
 coarseelem = cell(npar,1);

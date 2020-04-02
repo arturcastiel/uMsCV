@@ -29,7 +29,7 @@ auxflag = 0;
 % %OP_old
 OR  = genRestrictionOperator(size(elem,1), npar);
 if OP_old == -1;
-    OP =  genProlongationOperator(OR', TransFc, 2/3,1300);
+    OP =  genProlongationOperator(OR', TransFc, 2/3,3200);
 else
     OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
 end

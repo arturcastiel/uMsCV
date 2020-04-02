@@ -1,5 +1,5 @@
 %ploting interaction region generated
- ii = 1;
+ ii = 1; %35
  jj = ii;
  
 %      1

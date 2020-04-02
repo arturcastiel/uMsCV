@@ -1,12 +1,13 @@
 % para meio anisotropico 1 para 10 usar 7 para 8
 %for a retangle coarse mesh
+global centelem pt nc
 PPP = max(coord);
 LengX = PPP(1); 
 LengY = PPP(2);
 %% config aqui
 %6 e 17
-numX = 5;
-numY = 5;
+numX = nc;
+numY = nc;
 
 % for a hexagonal mesh
 Side = 0.125/2;
@@ -16,7 +17,7 @@ BB = sin(pi/6) * Side;
 
 
 % [ 1 - SQUARE 2 - HEXAGON 3 Hexagon Real ]
-meshPolygon = 3;
+meshPolygon = pt;
 
 if meshPolygon == 1
     

@@ -13,16 +13,22 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag
-nameFile = 'start_linear.dat';
-nameFile = 'start_ameba.dat';
+    coarseedge ordem splitFag bold nc pt
+nameFile = 'start_fivespot.dat';
+%nameFile = 'start_linear.dat';
+%nameFile = 'start_ameba.dat';
+%nameFile = 'start_serra.dat';
+pMethod = 1;
 splitFlag = 0;
 prepareStart
 multiscale = 'on';
 smetodo = 'FOU'
+pt = 3;
+nc = 12;
 %Globals2D_CPR;
 global osMode 
 osMode = 'linux';
+
 
 %% Tolerance Settings
 tol_c = 0.00001; flagboundcoarse = 0;
@@ -89,25 +95,29 @@ path(path,'iterative');
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
-multiCC = 0;
 
+multiCC = 1;
+splitFlag = 1;
  [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, multiCC, ...
     coarseningRatio, semiEdges,bedgeNode, edgesOnCoarseBoundary,oneNodeEdges, ...
-    pointloc,pointWeight,regularEdges] = prems(true, false,true, multiCC);
+    pointloc,pointWeight,regularEdges] = prems(true, splitFlag, pMethod, true, multiCC);
     if strcmp(multiscale, 'off')
         semiEdges = [];
     end
 %% ================ Multiscale Preprocessador for MsRSB ===================
 if ~isempty(semiEdges)
-% [ intRegion ,  boundRegion, GlobalBoundary, H, outSupport, ...
-%     coarseElemCenter,refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht]   = preMsRB(npar,coarseneigh, centelem,coarseelem, ...
-%     coarseblockcenter,exinterface,multiCC);
-% %% Alternative Multiscale Preprocessor 
-tic;
+bold = 1;    
+[ intRegion ,  boundRegion, GlobalBoundary, H, outSupport, ...
+    coarseElemCenter,refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht]   = preMsRB(npar,coarseneigh, centelem,coarseelem, ...
+    coarseblockcenter,exinterface,multiCC);
+%% Alternative Multiscale Preprocessor 
+% tic;
+bold = 2;
  [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
-     dictionary,edgesCoarseDict,coarseDiricht] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag);
-toc;
+     dictionary,edgesCoarseDict,coarseDiricht, cop, cqb] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag);
+
+ % toc;
 
 end
 %% ======================== CPR Preprocessor ==============================
@@ -138,6 +148,7 @@ end
 %% superfolder maker
 itOn = 0;
 superFolderMK
+% malha 32x32
 
 %% distorcao de malhas estruturadas
 %[auxcoord]=distortedramd;

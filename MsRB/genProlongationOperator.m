@@ -7,10 +7,10 @@ function [ OP] = genProlongationOperator(OPb, TransFc,w,maxint )
 
 %   OUTPUT:
 %   OP = prolongation operator
-
+    tol = 10^-14;
     %TransFc = full(TransFc);
     flag = 0;
-    global GlobalBoundary  outSupport wells elemloc
+    global GlobalBoundary  outSupport wells elemloc superFolder
     %Dinv = sparse( diag(1./TransFc(1:size(TransFc,1)+1:end)));
     %Dinv = sparse( diag(bsxfun(@ldivide,spdiags(TransFc,0),1)) );
     Dinv =  spdiags(bsxfun(@ldivide,spdiags(TransFc,0),1),0,size(TransFc,1) ,size(TransFc,1) );
@@ -23,6 +23,7 @@ function [ OP] = genProlongationOperator(OPb, TransFc,w,maxint )
     
     %Fa = [F F F F F F F F F F F F F F F];
     for index = 1: maxint
+        %postprocessorOP(OPb,index,superFolder,'OperadoresC');
         %d = full( -w*((Dinv*(TransFc*OPb))))  ;
         d =  -w*((Dinv*(TransFc*OPb )))  ;
         %d = full(d);
@@ -43,7 +44,7 @@ function [ OP] = genProlongationOperator(OPb, TransFc,w,maxint )
          %use tol  0.00001
 %          
          if index ~= 1
-             if abs(intError(index)) < 0.000000001 ||  abs( intError(index) - intError(index-1)) < 0.000000001        %abs(intError(index) / intError(index-1)) > 1.02
+             if abs(intError(index)) < tol||  abs( intError(index) - intError(index-1)) < tol        %abs(intError(index) / intError(index-1)) > 1.02
                  %index
                  break
              end

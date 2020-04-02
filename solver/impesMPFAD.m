@@ -64,21 +64,26 @@ count = 0;  iplotfc=0; tic; z = 1;
 %     mobility = ones(size(mobility));
 %% ============================== Escolha do solver de press�o ====================================
 %    if strcmp(multiscale, 'off')
-%        % Solver de press�o sem Multiescala
-%        [p,errorelativo,flowrate,flowresult]=solverpressure(kmap,fonte,...
+% %        % Solver de press�o sem Multiescala
+%        [pn,errorelativo,flowrate,flowresult]=solverpressure(kmap,fonte,...
 %            mobility,wells,S_old,V,nw,no,N,auxflag,Hesq, Kde, Kn, Kt, Ded,nflagno);
-%    else
-%        % Solver de press�o Multiescala
+% %    else
+% %        % Solver de press�o Multiescala
+%        [pa,errorelativo,flowrate,flowresult,OP_old,b2,b3,tempo]=solverpressureMsMPFAD(kmap,fonte,...
+%            mobility,wells,S_old,V,nw,no,N,auxflag,Hesq, Kde, Kn, Kt, Ded,nflagno,OP_old,S_cont);
+
+    mobility(:) = 1;
        [p,errorelativo,flowrate,flowresult,OP_old,b2,b3,tempo,v]=solverpressureMsMPFAD_Smoother(kmap,fonte,...
            mobility,wells,S_old,V,nw,no,N,auxflag,Hesq, Kde, Kn, Kt, Ded,nflagno,OP_old,S_cont);
-%        pref = load('REF_P');
+
+
+ %      pref = load('REF_P');
 % %        Linf(z,1) = max(abs(pref.REF_P-p))/max(abs(pref.REF_P)); L1(z,1) = sum(abs(pref.REF_P-p))/sum(abs(pref.REF_P)); L2(z,1) = sqrt(sum((pref.REF_P-p).^2))/sqrt(sum((pref.REF_P).^2));
 %        tsuav(z) = tempo; iter(z) = v;  
 %        z = z+1;
 %    end
 %==================================================================================================
-    %% calculo do fluxo fracional em cada elemento da malha
-    f_elem = fractionalflow(S_old,nw,no);
+    %% calculo do fluxo fracional em cada elemento da malha                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             f_elem = fractionalflow(S_old,nw,no);
 %     %% vaz�es
 %      bflux = flowrate(1:size(bedge,1));
 %      influx = flowrate(size(bedge,1)+1:end);

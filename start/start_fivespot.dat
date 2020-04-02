@@ -283,21 +283,21 @@ y
 
 //If [y], write below the path where the mesh file is:
  
-C:\MsCV_CPR\grids\Quad
+/home/arturcastiel/projetos/uMsCV/grids
 //C:\MsCV\mscvnla\grids\Quad
 //C:\Users\User\Desktop\MsCV_CPR\grids\Quad\ok
 //C:\Users\User\Desktop\MsCV_CPR\grids\Quad
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-five_spot.msh
+fivespot55.msh
 //five_spot_80.msh
 //5spot3.msh
 //5spotHETff.msh
 
 //If [n], write below the path where the geometry file is:  
 
-C:\MsCV\mscvnla\grids
+/home/arturcastiel/projetos/uMsCV/grids
 
 //Write below the name of the geometry file. Use the extension *.geo.
 
@@ -522,8 +522,8 @@ n
 //used to "draw" the surfaces during CAD building. (*.geo).  
 
 1
-100 1
-1 1
+1 0
+0 1
 2
 1 0
 0 1
