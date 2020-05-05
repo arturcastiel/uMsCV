@@ -13,7 +13,7 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold nc pt
+    coarseedge ordem splitFag bold mesh nx ny coarsemesh
 
 global osMode 
 osMode = 'windows';
@@ -21,13 +21,15 @@ osMode = 'windows';
 nameFile = 'start_linear.dat';
 %nameFile = 'start_ameba.dat';
 %nameFile = 'start_serra.dat';
-pMethod = 1;
+pMethod = 2;
 splitFlag = 0;
 prepareStartS
 multiscale = 'on';
 smetodo = 'FOU'
-pt = 3;
-nc = 12;
+mesh = 3;
+nx = 5;
+ny = 5;
+coarsemesh = 'coarse.msh';
 %Globals2D_CPR;
 
 
@@ -97,9 +99,11 @@ path(path,'iterative');
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
-
 multiCC = 1;
 splitFlag = 1;
+elemloc = primalDefine(pMethod);
+
+%% multiscale properties
  [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, multiCC, ...
     coarseningRatio, semiEdges,bedgeNode, edgesOnCoarseBoundary,oneNodeEdges, ...
@@ -109,10 +113,10 @@ splitFlag = 1;
     end
 %% ================ Multiscale Preprocessador for MsRSB ===================
 if ~isempty(semiEdges)
-bold = 1;    
-[ intRegion ,  boundRegion, GlobalBoundary, H, outSupport, ...
-    coarseElemCenter,refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht]   = preMsRB(npar,coarseneigh, centelem,coarseelem, ...
-    coarseblockcenter,exinterface,multiCC);
+% bold = 1;    
+% [ intRegion ,  boundRegion, GlobalBoundary, H, outSupport, ...
+%     coarseElemCenter,refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht]   = preMsRB(npar,coarseneigh, centelem,coarseelem, ...
+%     coarseblockcenter,exinterface,multiCC);
 %% Alternative Multiscale Preprocessor 
 % tic;
 bold = 2;

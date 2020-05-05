@@ -162,18 +162,18 @@ multiCC = 2;
 
 partionCenter = 2;
 
-if partionMethod == 1
-    partionMesh
-elseif partionMethod == 2
-    gridpartition
-end
+
+% if partionMethod == 1
+%     partionMesh = partitionMesh(mesh, nx, ny);
+% elseif partionMethod == 2
+%     gridpartition
+% end
 
 coarseelem = cell(npar,1);
 numElemtmp = 1: size(elem,1);
 
 for ll = 1:npar
     coarseelem{ll} = numElemtmp (elemloc(:) == ll) ;
-    
 end
 
 flagboundcoarse = zeros(size(coord,1),1);

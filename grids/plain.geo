@@ -6,6 +6,7 @@ L = 2200;
 
 H = 1;
 L = 1;
+Mesh.CharacteristicLengthFactor = 3;
 //1200 x 2200 x 170
 Mesh.Algorithm = 1;
 Point(1) = {0, 0, 0, cl__1};
