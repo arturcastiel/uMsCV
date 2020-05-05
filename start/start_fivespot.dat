@@ -284,16 +284,10 @@ y
 //If [y], write below the path where the mesh file is:
  
 /home/arturcastiel/projetos/uMsCV/grids
-//C:\MsCV\mscvnla\grids\Quad
-//C:\Users\User\Desktop\MsCV_CPR\grids\Quad\ok
-//C:\Users\User\Desktop\MsCV_CPR\grids\Quad
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
 fivespot55.msh
-//five_spot_80.msh
-//5spot3.msh
-//5spotHETff.msh
 
 //If [n], write below the path where the geometry file is:  
 

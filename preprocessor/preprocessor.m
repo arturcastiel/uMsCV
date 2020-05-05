@@ -31,7 +31,7 @@ function [coord,centelem,elem,esurn1,esurn2,nsurn1,nsurn2,bedge,inedge,...
     nonlinparam,multdopt,goefreeopt,order,timeorder,recovtype,lsneightype,...
     lsexp,keygravity,g,keycapil,ncaplcorey,mainpath,resfolder,benchkey,...
     klb,limiterflag,rowposit] = preprocessor 
-
+global osMode
 %--------------------------------------------------------------------------
 %It reads the data file (from "Start.dat")
 
@@ -53,8 +53,12 @@ function [coord,centelem,elem,esurn1,esurn2,nsurn1,nsurn2,bedge,inedge,...
 %It does not exist. Must be created.
 if exist(char(pathstore),'dir') == 0
     %Create a folder to put Results
-    command = ['mkdir ' char(pathstore)];
-    %It calls system
+    if strcmp(osMode, 'linux')
+        command = ['mkdir ' char(pathstore)];
+        %It calls system
+    elseif strcmp(osMode, 'windows')
+        command = ['md ' char(pathstore)];        
+    end    
     system(command);
 end  %End of IF
 
@@ -64,15 +68,23 @@ end  %End of IF
 if strcmp(complemfile,'0')
     %Attribute to "innerfolderpath" the "pathstore". There is no subfolder   
     mainpath = char(pathstore);
-
     %Define "resfolder"
     resfolder = 'Results';
-    %Define an auxiliary command (for RESULTS):
-    commandres = [mainpath '/' 'Results'];
-    %Define an auxiliary command (for IMAGES):
-    commandimg = [mainpath '/' 'Images'];
-    %Define an auxiliary command (for TABLES):
-    commandtbl = [mainpath '/' 'Tables'];
+ 
+    if strcmp(osMode, 'linux')
+        %Define an auxiliary command (for RESULTS):
+        commandres = [mainpath '/' 'Results'];
+        %Define an auxiliary command (for IMAGES):
+        commandimg = [mainpath '/' 'Images'];
+        %Define an auxiliary command (for TABLES):
+        commandtbl = [mainpath '/' 'Tables'];
+    elseif    strcmp(osMode, 'windows')
+        commandres = [mainpath '\' 'Results'];
+        %Define an auxiliary command (for IMAGES):
+        commandimg = [mainpath '\' 'Images'];
+        %Define an auxiliary command (for TABLES):
+        commandtbl = [mainpath '\' 'Tables'];
+    end
 %There is subfolder. 
 else
     %Create a subfolder to put Results:
@@ -81,29 +93,53 @@ else
     %Verify if it already exists
     if exist(auxcommand,'dir') == 0
         %Define command
+        if strcmp(osMode, 'linux')
         command = ['mkdir ' auxcommand];
+        elseif strcmp(osMode, 'windows')
         %It calls system
+        command = ['md ' auxcommand];
+        end
         system(command);
     end  %End of IF
 
-    %Attribute to "innerfolderpath" the "pathstore" + a subfolder
-    mainpath = [char(pathstore) '/' char(complemfile)];
+     
+    if strcmp(osMode, 'linux')
+        %Attribute to "innerfolderpath" the "pathstore" + a subfolder
+        mainpath = [char(pathstore) '/' char(complemfile)];
+        %Define "resfolder"
+        resfolder = ['Results_' char(complemfile)];
+        %Define an auxiliary command (for RESULTS):
+        commandres = [mainpath '/' resfolder];
+        %Define an auxiliary command (for IMAGES):
+        commandimg = [mainpath '/' 'Images_' char(complemfile)];
+        %Define an auxiliary command (for TABLES):
+        commandtbl = [mainpath '/' 'Tables_' char(complemfile)];
+        %It calls system
+    elseif strcmp(osMode, 'windows')
+        %Attribute to "innerfolderpath" the "pathstore" + a subfolder
+        mainpath = [char(pathstore) '\' char(complemfile)];
+        %Define "resfolder"
+        resfolder = ['Results_' char(complemfile)];
+        %Define an auxiliary command (for RESULTS):
+        commandres = [mainpath '\' resfolder];
+        %Define an auxiliary command (for IMAGES):
+        commandimg = [mainpath '\' 'Images_' char(complemfile)];
+        %Define an auxiliary command (for TABLES):
+        commandtbl = [mainpath '\' 'Tables_' char(complemfile)];
+    end    
     
-    %Define "resfolder"
-    resfolder = ['Results_' char(complemfile)];
-    %Define an auxiliary command (for RESULTS):
-    commandres = [mainpath '/' resfolder];
-    %Define an auxiliary command (for IMAGES):
-    commandimg = [mainpath '/' 'Images_' char(complemfile)];
-    %Define an auxiliary command (for TABLES):
-    commandtbl = [mainpath '/' 'Tables_' char(complemfile)];
 end  %End of IF
 
 %Create folders to store results, images and tables.
 %Once it does not exist, we will create it.
 if exist(commandres,'dir') == 0
     %Define command
-    command = ['mkdir ' commandres];
+    if strcmp(osMode, 'linux')
+        command = ['mkdir ' commandres];
+        %It calls system
+    elseif strcmp(osMode, 'windows')
+        command = ['md ' commandres];        
+    end    
     %It calls system
     system(command);
 end  %End of IF
@@ -111,16 +147,24 @@ end  %End of IF
 %Once it does not exist, we will create it.
 if exist(commandimg,'dir') == 0
     %Define command
-    command = ['mkdir ' commandimg];
-    %It calls system
+    if strcmp(osMode, 'linux')
+        command = ['mkdir ' commandimg];
+    elseif strcmp(osMode, 'windows')
+        command = ['md ' commandimg];
+    end
+        %It calls system
     system(command);
 end  %End of IF
 
 %Once it does not exist, we will create it.
 if exist(commandtbl,'dir') == 0
     %Define command
-    command = ['mkdir ' commandtbl];
-    %It calls system
+    if strcmp(osMode, 'linux')
+        command = ['mkdir ' commandtbl];
+    elseif strcmp(osMode, 'windows')   
+        command = ['md ' commandtbl];
+    end
+        %It calls system
     system(command);
 end  %End of IF
 
@@ -132,7 +176,11 @@ end  %End of IF
 if strcmp(keyfile,'y')  
     %In this option is necessary to write a path.
     %Attribute to "verifymshfile" the path and the name of file.
-    verifymshfile = [char(keypath1) '/' char(mshfile)];
+    if strcmp(osMode, 'linux')
+       verifymshfile = [char(keypath1) '\' char(mshfile)];
+    elseif strcmp(osMode, 'windows')
+       verifymshfile = [char(keypath1) '\' char(mshfile)];
+    end
     %Warning to user!
     if exist(verifymshfile,'file') == 0
         disp(' ');
@@ -151,7 +199,11 @@ if strcmp(keyfile,'y')
 %executed (User Interface) for such finality.
 elseif strcmp(keyfile,'n')  
     %Attribute to "verifygeofile" the path AND the file's name (with *.geo)
-    verifygeofile = [char(keypath2) '\' char(basename)];
+    if strcmp(osMode, 'linux')
+       verifygeofile = [char(keypath2) '\' char(basename)];
+    elseif strcmp(osMode, 'windows')
+       verifygeofile = [char(keypath2) '/' char(basename)];
+    end
     %Warning to user!
     if exist(verifygeofile,'file') == 0
         disp(' ');
@@ -180,16 +232,21 @@ elseif strcmp(keyfile,'n')
         
     %----------------------------------------------------------------------
     %Create and guard the new GEOMETRY and OPTIONS file.
-        
+    if strcmp(osMode, 'linux')
+        fS = '/';
+    elseif strcmp(osMode, 'linux')
+        fS = '\';
+    end
+
     %Open the file "*.geo" with its respective path
-    geometry = fopen([mainpath '/' geofile'],'w');
+    geometry = fopen([mainpath fS geofile'],'w');
 
     %Open the file "*.opt" with its respective path
-    options = fopen([mainpath '/' optfile'],'w');
+    options = fopen([mainpath fS optfile'],'w');
     
     %Get the mesh generated. It sends the mesh to data structure function.
     %See "getcoord", "getelem" and others.
-    verifymshfile = [mainpath '/' mshfile'];
+    verifymshfile = [mainpath fS mshfile'];
     
     %Attribute this informations to "*.geo" created
     for i = 1:length(head);

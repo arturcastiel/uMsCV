@@ -14,20 +14,22 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
     coarseedge ordem splitFag bold nc pt
-nameFile = 'start_fivespot.dat';
-%nameFile = 'start_linear.dat';
+
+global osMode 
+osMode = 'windows';
+%nameFile = 'start_fivespot.dat';
+nameFile = 'start_linear.dat';
 %nameFile = 'start_ameba.dat';
 %nameFile = 'start_serra.dat';
 pMethod = 1;
 splitFlag = 0;
-prepareStart
+prepareStartS
 multiscale = 'on';
 smetodo = 'FOU'
 pt = 3;
 nc = 12;
 %Globals2D_CPR;
-global osMode 
-osMode = 'windows';
+
 
 
 %% Tolerance Settings
