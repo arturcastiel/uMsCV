@@ -27,7 +27,7 @@ pt = 3;
 nc = 12;
 %Globals2D_CPR;
 global osMode 
-osMode = 'linux';
+osMode = 'windows';
 
 
 %% Tolerance Settings
