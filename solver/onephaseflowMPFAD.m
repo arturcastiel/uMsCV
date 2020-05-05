@@ -15,11 +15,16 @@ lastMethod = 2;
 nflagno= contflagnoN(bedge);
 [w,s]=Pre_LPEW_2(kmap,N);
 
-
 wsdynamic = dynamic(pointWeight);
 [ TransF, F ] = assemblyOnePhaseMPFAD( w,s, Kde, Ded, Kn, Kt, nflagno, Hesq);
 
-po = TransF\F
+[TransF,F] = addDirichLetOnePhaseMPFAD(TransF,F);
+[OP,CT] = genProlongationOperatorAMS(TransF, F);
+
+% [OP2,CT2] = genProlongationOperatorAMS(TransF, F);
+%[OP,CT] = genProlongationOperatorAMS(TransF, F);
+
+
 
 auxflag = 0;
 
@@ -36,30 +41,38 @@ TransFc(1:size(TransFc,2)+1:end) = diag(TransFc) - sum(TransFc,2);
 
 tic
 OR  = genRestrictionOperator(size(elem,1), npar);
-OP =  genProlongationOperator(OR', TransFc, 2/3,1800);
+%OP =  genProlongationOperator(OR', TransFc, 2/3,1800);
 
 
 
 %% wells treatment
-if size(wells,2) > 1
-    ref = wells(:,5) > 400;
-end
+% if size(wells,2) > 1
+%     ref = wells(:,5) > 400;
+% end
 %%
 ac = OR * TransF * OP;
-bc = OR * F;
+%bc = OR * F;
+bc = (OR * F) - OR*TransF*CT;
+
 pc = ac\bc;
 pd = OP*pc;
 
+pt = pd + CT;
+
 %%
-if size(wells,2) > 1
-  pd(wells(ref,1)) = wells(ref,end);
-end
+% if size(wells,2) > 1
+%   pd(wells(ref,1)) = wells(ref,end);
+% end
 %% solving the system for comparison purpose
 p = TransF\ F;
+postprocessorTMS(full(pt ),full(p),0,superFolder,'AMS-OP');
+postprocessorTMS(full(pd ),full(p),0,superFolder,'AMS-OP-CORRECAO');
+
 
 %% Calculates the flow on the Edges of the Coarse Boundary
 %flowPd = flowrateMsMPFAD(edgesOnCoarseBoundary,pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
-[flowPd, flowresultPd,velocityPd]=flowrateMPFAD(pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
+mobility = ones(size(inedge,1) +  size(bedge,1),1);
+[flowPd, flowresultPd,velocityPd]=flowrateMPFAD(pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag,mobility);
 flowPd2 = flowPd( edgesOnCoarseBoundary + size(bedge,1));
 %[flowPd3, flowresultPd3,velocityPd3]=flowrateMPFAD(p,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
 

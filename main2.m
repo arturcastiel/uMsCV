@@ -13,12 +13,15 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold nc pt
+    coarseedge ordem splitFag bold nc pt flagSuavizador suavizador MetodoSuavizador
+suavizador = 'SOR';
+MetodoSuavizador =  'S_Multiescala';
+flagSuavizador = 'on';
 nameFile = 'start_fivespot.dat';
 %nameFile = 'start_linear.dat';
 %nameFile = 'start_ameba.dat';
 %nameFile = 'start_serra.dat';
-pMethod = 1;
+pMethod = 0;
 splitFlag = 0;
 prepareStart
 multiscale = 'on';
@@ -92,12 +95,35 @@ path(path,'iterative');
     normals,esureface1,esureface2,esurefull1,esurefull2,elemarea,dens,visc,...
     satlimit,pormap,bcflag,courant,totaltime,numcase,phasekey,kmap,...
     wells,elemloc,npar,coarseelem, ghostelem, multiCC,pmethod,mshfile, keymsfv,interptype,keypath1 ] = preprocessor;
+% %% primal creation
+% Q = [centelem(:,1:2), ones(size(elem,1),1)];
+% 'cosine' 'sqeuclidean' 'correlation' 'cityblock'
+% n = 35;
+% mat = rand(n,2);
+% mat = [mat, ones(size(mat,1),1)];
+% seed = randi(size(centelem,1), n,1)
+
+%seed = [1, 10, 900, 100, 5];
+
+value = Q(seed,:);
+
+F = kmeans(Q,n) %,'Distance','cosine', 'Start',Q(seed,:));
+% 
+% L =  kmeans(Q(F==1,:) ,4, 'Distance','cityblock');
+% 
+% F(F==1) = (L);
+% %F = clusterdata(Q,'Linkage','centroid','MaxClust',n);
+% 
+% npar = max(F);
+elemloc = F;
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
 
 multiCC = 1;
 splitFlag = 1;
+
+
  [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, multiCC, ...
     coarseningRatio, semiEdges,bedgeNode, edgesOnCoarseBoundary,oneNodeEdges, ...

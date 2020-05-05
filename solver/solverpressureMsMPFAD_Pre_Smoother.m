@@ -20,6 +20,7 @@ mobRegion = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mobility);
 %assembly da matriz
 [ TransF, F] = globalmatrixmpfadn( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
 %%MultiScale
+p = TransF\F;
 %pre condition matrix
  %Testando pra TransF
 L = tril(TransF, -1) ;%+ diag(diag(TransF));
@@ -76,7 +77,7 @@ S = W*(D1+W*L1);
 % ac = OR * A * OP; 
 % bc = OR * b;
 % pc = ac\bc;
-% pd = OP*pc; % solução da malha grossa
+% pd = OP*pc; % soluï¿½ï¿½o da malha grossa
  %% Precondicionador para resolver o sistema A*x=b
 % A = M\TransF; 
 b =M\F;
@@ -86,10 +87,10 @@ b =M\F;
 % L = OR * L * OP;
 % U = OR * U * OP; 
 % S = OR * M * OP;
-% [L,U] = ilu(ac,struct('type','ilutp','droptol',1e-6)); % função do próprio Matlab
+% [L,U] = ilu(ac,struct('type','ilutp','droptol',1e-6)); % funï¿½ï¿½o do prï¿½prio Matlab
 bc = OR * b;  
-% [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S1); % função do próprio Matlab
-% [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % função do próprio matlab
+% [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S1); % funï¿½ï¿½o do prï¿½prio Matlab
+% [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % funï¿½ï¿½o do prï¿½prio matlab
 % pd = OP*pc;
 
 % 
@@ -111,7 +112,7 @@ v=0;
 while max(abs(rf)) > tol
 %--------Etapa multiescala------------
 %     rc = OR * rf;
-% %     disp('corse resíduo')
+% %     disp('corse resï¿½duo')
 % %     max(abs(rc))
 %     dpc = ac\rc;
 %     dpf = OP * dpc; 
@@ -127,13 +128,13 @@ while max(abs(rf)) > tol
 %     pf = pn - dd;
 %------------ ILU(0)-----------------
 %     pf = pff + M\rff*W;
-%     pf = pff + A\rff; %sugestão de Paulo
+%     pf = pff + A\rff; %sugestï¿½o de Paulo
 %     pf = sor(TransF,pf, F, 2/3,100, 10^-8); %testar pra tensor cheio e hetero
 %----------------Jacobi---------------
 %     DiagT=diag(diag(TransF));
 %     RT=TransF-DiagT;
 %     pf = DiagT\(rff-RT*pff);
-%--------Não considera a etapa multiescala --------
+%--------Nï¿½o considera a etapa multiescala --------
 %     
 %     pf = pf + TransF\rf;
 %     pf = pff + M\rff;

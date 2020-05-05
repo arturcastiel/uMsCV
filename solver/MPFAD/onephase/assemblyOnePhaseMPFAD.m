@@ -6,9 +6,9 @@ global coord elem esurn1 esurn2  bedge inedge  centelem bcflag wells elemarea
 % mobility(1:size(bedge,1),1)=auxmobility2;
 % mobility((size(bedge,1)+1):(size(inedge,1)+size(bedge,1)),1)=auxmobility1;
 %-----------------------inicio da rotina ----------------------------------%
-%Constrói a matriz global.
+%Constrï¿½i a matriz global.
 
-M=sparse(size(elem,1),size(elem,1)); %Prealocação de M.
+M=sparse(size(elem,1),size(elem,1)); %Prealocaï¿½ï¿½o de M.
 I=sparse(size(elem,1),1);
 % fonte
 %I=I+fonte.*elemarea;
@@ -31,7 +31,7 @@ I=sparse(size(elem,1),1);
         v1=centelem(bedge(ifacont,3),:)-coord(bedge(ifacont,1),:);
         v2=centelem(bedge(ifacont,3),:)-coord(bedge(ifacont,2),:);
         normcont=norm(v0);
-        % Tratamento do nó nos vértices 2 e 4%
+        % Tratamento do nï¿½ nos vï¿½rtices 2 e 4%
         
         if bedge(ifacont,5)<200
             %DIRICHLET
@@ -56,12 +56,12 @@ I=sparse(size(elem,1),1);
     end
 %end
 
-% contribuição nas faces internas
+% contribuiï¿½ï¿½o nas faces internas
 for iface=1:size(inedge,1)
-    % pressão prescrita no elemento do poço injetor
+    % pressï¿½o prescrita no elemento do poï¿½o injetor
     
     
-    %Contabiliza as contribuições do fluxo numa aresta para os elementos %
+    %Contabiliza as contribuiï¿½ï¿½es do fluxo numa aresta para os elementos %
     %a direita e a esquerda dela.                                        %
     
     M(inedge(iface,3), inedge(iface,3))=M(inedge(iface,3), inedge(iface,3))- Kde(iface);
@@ -69,8 +69,8 @@ for iface=1:size(inedge,1)
     M(inedge(iface,4), inedge(iface,4))=M(inedge(iface,4), inedge(iface,4))- Kde(iface);
     M(inedge(iface,4), inedge(iface,3))=M(inedge(iface,4), inedge(iface,3))+ Kde(iface);
     
-    %Se os nós das arestas estiverem em fronteiras de Dirichlet, suas
-    %contribuições serão contabilizadas logo abaixo.
+    %Se os nï¿½s das arestas estiverem em fronteiras de Dirichlet, suas
+    %contribuiï¿½ï¿½es serï¿½o contabilizadas logo abaixo.
     %CHECANDO SE OS NOS INTERNOS SAO CONDICAO DE NEUMAN OU DIRICHLET
    
     %%APPLYING DIRICHLET BOUNDARY CONDITIONS FOR INTERNAL EDGES
@@ -85,7 +85,7 @@ for iface=1:size(inedge,1)
         I(inedge(iface,3))=I(inedge(iface,3))+Kde(iface)*Ded(iface)*nflag(inedge(iface,2),2);
         I(inedge(iface,4))=I(inedge(iface,4))-Kde(iface)*Ded(iface)*nflag(inedge(iface,2),2);
     end
-    % quando o nó pertece ao contorno de Neumann
+    % quando o nï¿½ pertece ao contorno de Neumann
 
 %% provavelmente lixo no codigo do fernando    NAO DELETAR
 %     %%APPLYING NEUMANN BOUNDARY CONDITIONS FOR INTERNAL EDGES
@@ -101,7 +101,7 @@ for iface=1:size(inedge,1)
 %     end
 %
 %%     
-    %Contabilização das contribuições dos nós que não estão na
+    %Contabilizaï¿½ï¿½o das contribuiï¿½ï¿½es dos nï¿½s que nï¿½o estï¿½o na
     %fronteiras de Dirichlet.
     
     if nflag(inedge(iface,1),1)>200
@@ -124,41 +124,41 @@ for iface=1:size(inedge,1)
 end
 
 
-%% Adding the influence of the wells on the matrix
-if size(wells,2) > 1 
-    wellSolv;
-    if ~isempty(wells)
-        %Saturation flags
-        for index = 1:size(flagsSatElem,1)
-            I(flagsSatElem{index})=  (flagsSatValue(index)/flagsSatTotalArea(index))  * elemarea(flagsSatElem{index});
-        end
-        
-        for index = 1: size(flagsInjElem,1)
-            M(flagsInjElem{index},:) = 0* M(flagsInjElem{index},:);
-            %flagsInjElem{index},:)
-            for ii = 1 : size(flagsInjElem{index},2)
-                M(flagsInjElem{index}(ii),flagsInjElem{index}(ii)) = 1;
-                I(flagsInjElem{index}(ii)) = flagsInjValue(index);
-            end
-            %for ii = 1: size(flags
-        end
-        
-        for index = 1: size(flagsProdElem,1)
-            M(flagsProdElem{index},:) = 0* M(flagsProdElem{index},:);
-            %flagsInjElem{index},:)
-            for ii = 1 : size(flagsProdElem{index},2)
-                M(flagsProdElem{index}(ii),flagsProdElem{index}(ii)) = 1;
-                I(flagsProdElem{index}(ii)) = flagsProdValue(index);
-            end
-            %for ii = 1: size(flags
-        end
-    end
-end
+% %% Adding the influence of the wells on the matrix
+% if size(wells,2) > 1 
+%     wellSolv;
+%     if ~isempty(wells)
+%         %Saturation flags
+%         for index = 1:size(flagsSatElem,1)
+%             I(flagsSatElem{index})=  (flagsSatValue(index)/flagsSatTotalArea(index))  * elemarea(flagsSatElem{index});
+%         end
+%         
+%         for index = 1: size(flagsInjElem,1)
+%             M(flagsInjElem{index},:) = 0* M(flagsInjElem{index},:);
+%             %flagsInjElem{index},:)
+%             for ii = 1 : size(flagsInjElem{index},2)
+%                 M(flagsInjElem{index}(ii),flagsInjElem{index}(ii)) = 1;
+%                 I(flagsInjElem{index}(ii)) = flagsInjValue(index);
+%             end
+%             %for ii = 1: size(flags
+%         end
+%         
+%         for index = 1: size(flagsProdElem,1)
+%             M(flagsProdElem{index},:) = 0* M(flagsProdElem{index},:);
+%             %flagsInjElem{index},:)
+%             for ii = 1 : size(flagsProdElem{index},2)
+%                 M(flagsProdElem{index}(ii),flagsProdElem{index}(ii)) = 1;
+%                 I(flagsProdElem{index}(ii)) = flagsProdValue(index);
+%             end
+%             %for ii = 1: size(flags
+%         end
+%     end
+% end
 %%
 
-% adequação da matriz nos poços produtores
+% adequaï¿½ï¿½o da matriz nos poï¿½os produtores
 
-% contribuição dos poços
+% contribuiï¿½ï¿½o dos poï¿½os
 % if max(wells)~=0
 %     sumvol=0;
 %     for iw = 1:size(wells,1)  

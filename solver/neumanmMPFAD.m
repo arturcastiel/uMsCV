@@ -5,7 +5,7 @@ function [ pms ] = neumanm(A,B, coarseelem , edgesOnCoarseBoundary, fluxMs,pc )
 global refCenterInCoaseElem npar inedge elemloc coarseelem dictionary coarseDiricht
 
 pms = sparse(size(B,1),1);
-%%Adicionar a influência em ambos os lados do fluxo
+%%Adicionar a influï¿½ncia em ambos os lados do fluxo
 
 
 
@@ -36,14 +36,11 @@ for index = 1:npar
     
     peqSol =   peqA\peqB;
     
-    if max(peqSol) > 1
-        1+1;
-    end
-    
+   
     pms(coarseelem{index}) = peqSol;
 end
 
-%%Adicionar as influências das vazoes calculadas
+%%Adicionar as influï¿½ncias das vazoes calculadas
 
 %%Resolver os sistemas menores
 

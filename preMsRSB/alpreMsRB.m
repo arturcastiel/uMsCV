@@ -12,6 +12,7 @@ coarseElemCenter = zeros(npar,1);
     for ii = 1:npar
         ref = elemloc == ii;
         center_point = weiszfeld(centelem(ref,1:2));
+        ii
         ref(ref) = minDis(center_point , centelem(ref,1:2));
         coarseElemCenter(ii) = find(ref);
     end
