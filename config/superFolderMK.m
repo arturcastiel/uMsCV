@@ -1,18 +1,24 @@
 %% Preparing output dat
-global superFolder
+global superFolder osMode
+
+if strcmp(osMode,'windows')
+    sF = '\';
+elseif strcmp(osMode,'linux')
+    sF = '';
+end
 caseType = mshfile{1}(1:end-4);
-folder = '/results';
-name1 = '/Original.dat';
-name2 = '/Multiscale.dat';
-name3 = '/Header.dat';
-name4 = '/CurveOriginal.dat';
-name5 = '/CurveMs.dat';
+folder = [sF 'results'];
+name1 = [sF 'Original.dat'];
+name2 = [sF 'Multiscale.dat'];
+name3 = [sF 'Header.dat'];
+name4 = [sF 'CurveOriginal.dat'];
+name5 = [sF 'CurveMs.dat'];
 if itOn == 0
     corText = '-offCor';
 else
     corText = '-onncor';
 end
-caseTypeT = strcat('/',caseType,'-',num2str(npar),'cv',corText);
+caseTypeT = strcat(sF ,caseType,'-',num2str(npar),'cv',corText);
 superFolder = strcat(pwd,folder,caseTypeT);
 
 

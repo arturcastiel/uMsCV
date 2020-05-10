@@ -1,6 +1,6 @@
 function [pressure,errorelativo,flowrate,flowresult,OP_old,b2,b3,tempo,v]=solverpressureMsMPFAD_Smoother(kmap,fonte,...
     mobility,wells,S_old,V,nw,no,N,auxflag,Hesq, Kde, Kn, Kt, Ded,nflag,OP_old,S_cont)
-global w s flagboundcoarse superFolder pt nc npar coarseElemCenter
+global w s flagboundcoarse superFolder pt nc npar coarseElemCenter refDir
 % function [pressure,errorelativo,flowrate,flowresult]=solverpressure(kmap,nflagface,nflagno,fonte,...
 %     tol, nit,p_old,mobility,gamma,wells,S_old,V,nw,no,N,parameter,metodoP,...
 %     auxflag,interptype,Heseyh v, Kde, Kn, Kt, Ded,weightDMP,auxface,benchmark,iteration,nflag)
@@ -18,24 +18,36 @@ wsdynamic = dynamic(pointWeight);
 [w,s]=Pre_LPEW_2T(kmap,mobility,V,S_old,nw,no,N);
 mobRegion = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mobility);
 %assembly da matriz
-[ TransF, F] = globalmatrixmpfadn( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
-[perm_matrix, per_vec] = genPermMatrix();
-po = TransF\F;
+%[ TransF, F] = globalmatrixmpfadn( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
+[ TransF, F] = globalmatrixmpfadnobc( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
+%[perm_matrix, per_vec] = genPermMatrix();
 %%MultiScale
 %pre condition matrix 
-TransFc = TransF; %original
-n = size(TransFc,2);
-TransFc(1:size(TransFc,2)+1:end) = diag(TransFc) - sum(TransFc,2);
+% TransFc = TransF; %original
+% n = size(TransFc,2);
+% TransFc(1:size(TransFc,2)+1:end) = diag(TransFc) - sum(TransFc,2);
 auxflag = 0;
 % %OP_old
 OR  = genRestrictionOperator(size(elem,1), npar);
 if OP_old == -1;
-    OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
-else
-    OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
-end
+    %OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
+    [OP,CT] = genProlongationOperatorAMS(TransF, F);
 
-postprocessorOP(OP,0,superFolder,'Operadores');
+else
+    %OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
+    [OP,CT] = genProlongationOperatorAMS(TransF, F);
+end
+%[ TransF, F] = globalmatrixmpfad_bc(TransF, F);
+
+for ii = find(refDir)'
+    Trans(ii,:) = 0;
+    Trans(ii, ii) = 1; 
+    F(ii) = 1;    
+end
+    
+po = TransF\F;
+
+%postprocessorOP(OP,0,superFolder,'Operadores');
 OP_old = OP;
 % 
 % %% wells treatment
@@ -47,47 +59,59 @@ OP_old = OP;
  %% Precondicionador para resolver o sistema A*x=b
 % A = M\TransF; b =M\F;
 % A = M*TransF; b =M*F;
+% A = TransF; b = F;
+% ac = OR * A * OP; 
+% bc = OR * b; 
 A = TransF; b = F;
 ac = OR * A * OP; 
-bc = OR * b; 
+%bc = OR * b;
+bc = (OR * b) - OR*A*CT;
 %% 
-if size(wells,2) > 1
-    ref = wells(:,5) > 400;
-    %% %testes
-    %OP(wells(find(ref),1),:) = 0 ;
-end
 
-for jj = wells(ref,1)'
-    refC = (coarseElemCenter == jj);
-    if sum(refC) ~= 0
-        refB = wells(:,1) == jj;
-        value = wells(refB,end);
-        pc(refC) = value;    
-    end
-end
+
+% % % % 
+% % % if size(wells,2) > 1
+% % %     ref = wells(:,5) > 400;
+% % %     % %testes
+% % %     OP(wells(find(ref),1),:) = 0 ;
+% % % end
+
+% for jj = wells(ref,1)'
+%     refC = (coarseElemCenter == jj);
+%     if sum(refC) ~= 0
+%         refB = wells(:,1) == jj;
+%         value = wells(refB,end);
+%         pc(refC) = value;    
+%     end
+% end
 %% Solu��o multiescala
 pc = ac\bc;
 
-for jj = wells(ref,1)'
-    refC = (coarseElemCenter == jj);
-    if sum(refC) ~= 0
-        refB = wells(:,1) == jj;
-        value = wells(refB,end);
-        pc(refC) = value;    
-    end
-end
-pd = OP*pc;
+% for jj = wells(ref,1)'
+%     refC = (coarseElemCenter == jj);
+%     if sum(refC) ~= 0
+%         refB = wells(:,1) == jj;
+%         value = wells(refB,end);
+%         pc(refC) = value;    
+%     end
+% end
+pd = OP*pc + CT;
 %% Suavizador
 tic 
+
+C = CT\F;
+flagSuavizador = 'on';
+suavizador = 'SOR';
+Wf = 5/3;
 if strcmp(flagSuavizador, 'on')
     if strcmp(suavizador, 'SOR')
         L = tril(TransF, -1);
         U = triu(TransF,  1);
         D = diag(diag(TransF));
-        S = (D+Wf*L);
+        S = (D+Wf*L) + C;
 %         M = (D+Wf*L);
-
-        if strcmp(suavizador, '2_n�veis')
+        %suavizador =  '2_niveis';
+        if strcmp(suavizador, '2_niveis')
             ac1 = OR * A * OP;
             L1 = tril(ac1, -1) ;
             U1 = triu(ac1,  1) ;
@@ -103,7 +127,7 @@ if strcmp(flagSuavizador, 'on')
         S = ilu(A);
         
    
-        if strcmp(suavizador, '2_n�veis')
+        if strcmp(suavizador, '2_niveis')
             Sc = ilu(ac); % Suavizador na escala coarse
             Sf = ilu(A); % Suavizador na escala fina
         end
@@ -112,15 +136,21 @@ if strcmp(flagSuavizador, 'on')
 % [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S); % fun��o do pr�prio Matlab
 % [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % fun��o do pr�prio matlab
 %%
-if size(wells,2) > 1
-  pd(wells(ref,1)) = wells(ref,end);
-end
+% if size(wells,2) > 1
+%   pd(wells(ref,1)) = wells(ref,end);
+% end
 %% Etapa iterativa
 
 pf = pd; % Entrada da etapa iterativa 
 rf = b - A * pf; 
-tol = 10^-7; v=0;
-erro=10^7;
+tol = 10^-3; v=0;
+erro=10^4;
+
+u = OP*(ac^-1)*OR;
+
+S = u + C  - (u*TransF*C);
+
+MetodoSuavizador = 'S_Multiescala';
 while max(abs(rf)) > tol
     
     if strcmp(MetodoSuavizador, 'S_Multiescala')
@@ -134,7 +164,7 @@ while max(abs(rf)) > tol
 
             pf = pff + S\rff;
       
-    elseif strcmp(MetodoSuavizador, 'S_2_n�veis')
+    elseif strcmp(MetodoSuavizador, '2_niveis')
 
        pf3 = pf + Sf\(b - A*pf);
        pf2 = pf3 + OP*(Sc\OR)*(b - A*pf3); 
@@ -361,5 +391,5 @@ dlmwrite('simuSingle.txt', full(ll),'-append')
 %         disp(y);
 %         
 % end
-
+OP_old = OP;
 end
