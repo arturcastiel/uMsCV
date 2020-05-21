@@ -11,7 +11,12 @@ global coord elem esurn1 esurn2  bedge inedge  centelem bcflag wells elemarea
 M=sparse(size(elem,1),size(elem,1)); %Prealocação de M.
 I=sparse(size(elem,1),1);
 % fonte
-%I=I+fonte.*elemarea;
+
+ref1 =    (centelem(:, 1) <  5/8) & (centelem(:, 1) >  3/8);
+ref2 =    (centelem(:, 2) <  5/8) & (centelem(:, 2) >  3/8);
+ref = ref1 & ref2;
+
+I(ref) =I(ref) +  elemarea(ref)./ sum(elemarea(ref));
 
 %criar matriz monofasica
 % if max(wells)~=0

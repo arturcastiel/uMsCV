@@ -287,7 +287,7 @@ C:\Users\artur\project\uMsCV\grids
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-5fe.msh
+cond2.msh
 
 //If [n], write below the path where the geometry file is:  
 
@@ -519,14 +519,9 @@ n
 1 0
 0 1
 2
-2 0
-0 2
-3
-1 0
-0 1
-4
-1 0 
-0 1
+10 0
+0 10
+
 //--------------------------------------------------------------------
 //Distribution of porosity:
 
@@ -681,6 +676,6 @@ pvi
 //if you write "0" replacing the number of wells, it will be not 
 //necessary to erase the numbers below. Keep it to reference.  
 
-2
-1 0 0 0.025 301 0 0 0 0
+0
+1 0 0 0.025 301 1 0 1 0
 1 1 1 0.025 0 0 501 0 0

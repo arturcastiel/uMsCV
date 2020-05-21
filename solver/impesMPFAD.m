@@ -9,10 +9,9 @@ global elem coord inedge pormap elemarea bedge centelem smetodo CFL ordem; Globa
 [Hesq, Kde, Kn, Kt, Ded] = Kde_Ded_Kt_Kn(kmap);
 fonte=0;
 nflagno= contflagnoN(bedge);
-global bnodes
-nflagno(bnodes,1) = 101;
-
-nflagno(bnodes,2) = 0;
+% global bnodes
+% nflagno(bnodes,1) = 101;
+% nflagno(bnodes,2) = 0;
 %[w,s]=Pre_LPEW_2(kmap,N);
 %Initializing IMPES variables
 cont = 1;

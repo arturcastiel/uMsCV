@@ -6,7 +6,7 @@ end
 
 
 function [id_classify, nodes, edges, internals] = createClassVec()
-    global coarseElemCenter elemloc GlobalBoundary  inedge
+    global coarseElemCenter elemloc GlobalBoundary  inedge edges_ordering
     id_classify = zeros(size(elemloc));
     edges = false(size(elemloc));
     nodes = false(size(elemloc));
@@ -21,8 +21,9 @@ function [id_classify, nodes, edges, internals] = createClassVec()
     G = graph(auxmat(:,1) , auxmat(:,2));
     id_classify(transvec) = conncomp(G);
     max_id = max(id_classify);
-    id_classify(edges) = max_id + 1;
-    id_classify(nodes) = max_id + 2;
+    id_classify(edges) = max_id + edges_ordering(edges);
+    max_id = max(id_classify);
+    id_classify(nodes) = max_id + 1;
 end
 
 function [matrix, r] = createPerMat(id_classify)

@@ -8,6 +8,14 @@ global coord elem esurn1 esurn2  bedge inedge  centelem elemarea bcflag wells
 %-----------------------inicio da rutina ----------------------------------%
 %Constr�i a matriz global.
 gamma = 1e+10;
+% 
+ref1 =    (centelem(:, 1) <  5/8) & (centelem(:, 1) >  3/8);
+ref2 =    (centelem(:, 2) <  5/8) & (centelem(:, 2) >  3/8);
+ref = ref1 & ref2;
+
+I(ref) =I(ref) +  elemarea(ref)./ sum(elemarea(ref));
+
+
 
 % % adequa��o da matriz nos po�os produtores
 if max(wells)~=0

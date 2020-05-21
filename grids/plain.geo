@@ -1,4 +1,4 @@
-cl__1 = 0;
+cl__1 = 30;
 //H = 2200;
 //L = 1200;
 H = 1200;
@@ -6,9 +6,9 @@ L = 2200;
 
 H = 1;
 L = 1;
-Mesh.CharacteristicLengthFactor = 3;
+Mesh.CharacteristicLengthFactor = 2;
 //1200 x 2200 x 170
-Mesh.Algorithm = 1;
+//Mesh.Algorithm = 1;
 Point(1) = {0, 0, 0, cl__1};
 Point(2) = {L, 0, 0, cl__1};
 Point(3) = {L, H, 0, cl__1};
@@ -24,13 +24,16 @@ Line(4) = {4, 1};
 // Tell Gmsh how many cells you want per edge somar:	 Somar mais 1
 //Transfinite Line{1,3} = 61Using Progression 1;
 //Transfinite Line{2,4} = 221Using Progression 1;
+//Transfinite Line{1,3} = 4Using Progression 1;
+//Transfinite Line{2,4} = 4Using Progression 1;
+
 
 Line Loop(1) = {1, 2, 3, 4};
 Plane Surface(1) = {1};
 
 // Recombine the triangles into quads:
 //Transfinite Surface{1} = {1,2,3,4};
-//Recombine Surface{1};
+Recombine Surface{1};
 //Mesh.Smoothing = 100;
 //Point{5} In Surface {1};
 Physical Line(201) = {3, 4, 1, 2};

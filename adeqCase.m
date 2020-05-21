@@ -24,10 +24,10 @@ kxy = -(1- ee)*(centelem(:,1) .* centelem(:,2));
 kyy= (ee * (centelem(:,2).^2)) +  (centelem(:,1).^2);
 
 kmap = [ [1:size(elem,1)]' , kxx, kxy, kxy, kyy];
-kmap(:,2) = 1;
-kmap(:,3) = 0;
-kmap(:,4) = 0;
-kmap(:,5) = 1 ;
+% kmap(:,2) = 1;
+% kmap(:,3) = 0;
+% kmap(:,4) = 0;
+% kmap(:,5) = 1 ;
 
 
 

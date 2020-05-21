@@ -1,6 +1,6 @@
 function [ M, I ] = globalmatrixmpfadnobc( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte)
 
-global coord elem esurn1 esurn2  bedge inedge  centelem elemarea bcflag sourceTerm actTerm 
+global coord elem esurn1 esurn2  bedge inedge  centelem elemarea bcflag %sourceTerm actTerm 
 auxmobility1=mobility(1:size(inedge,1),1);
 auxmobility2=mobility((size(inedge,1)+1):(size(inedge,1)+size(bedge,1)),1);
 mobility(1:size(bedge,1),1)=auxmobility2;
@@ -41,7 +41,7 @@ else
             c2=nflag(bedge(ifacont,2),2);
             
             A=-Kn(ifacont)/(Hesq(ifacont)*norm(v0));
-            
+                
             %Preenchimento
             
             M(bedge(ifacont,3),bedge(ifacont,3))=M(bedge(ifacont,3),bedge(ifacont,3))-mobility(ifacont)*A*(norm(v0)^2);
@@ -178,5 +178,5 @@ I
 % end
 
 
-    I(actTerm) = I(actTerm) + sourceTerm;
+    %I(actTerm) = I(actTerm) + sourceTerm;
 end

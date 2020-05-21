@@ -13,22 +13,26 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold mesh nx ny coarsemesh
+    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering
 
-global osMode 
+global osMode dualAround
 osMode = 'windows';
-nameFile = 'start_fivespot.dat';
+%nameFile = 'start_fivespot.dat';
+nameFile = 'start_darlan.dat';
+%nameFile = 'cond1.dat';
+nameFile = 'cond2.dat';
+
 %nameFile = 'start_linear.dat';
 %nameFile = 'start_ameba.dat';
 %nameFile = 'start_serra.dat';
-pMethod = 1;
+pMethod = 2;
 splitFlag = 0;
 prepareStartS
 multiscale = 'on';
 smetodo = 'FOU'
 mesh = 3;
-nx = 5;
-ny = 5;
+nx = 6;
+ny = 6;
 coarsemesh = 'coarse.msh';
 %Globals2D_CPR;
 
@@ -99,10 +103,12 @@ path(path,'iterative');
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
+%adeqPerm;
 multiCC = 1;
-splitFlag = 1;
-elemloc = primalDefine(pMethod);
 
+splitFlag = 1;
+[primal_forming, primal] = primalDefine(pMethod);
+elemloc = graphIntegrity(elemloc);
 %% multiscale properties
  [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, multiCC, ...
@@ -119,11 +125,13 @@ if ~isempty(semiEdges)
 %     coarseblockcenter,exinterface,multiCC);
 %% Alternative Multiscale Preprocessor 
 % tic;
-bold = 2;
- [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
-     dictionary,edgesCoarseDict,coarseDiricht, cop, cqb] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag);
-
- % toc;
+  [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
+      dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = dualDefine(3, primal_forming, primal, npar, coarseneigh, centelem, exinterface, multiCC, splitFlag)
+% bold = 2;
+%  [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
+%      dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = alpreMsRB(npar, coarseneigh, centelem, exinterface, multiCC, splitFlag);
+% 
+%  % toc;
 
 end
 %% ======================== CPR Preprocessor ==============================
@@ -285,7 +293,8 @@ benchmark='gaowu9';
 %adeSPE
 %verficar a alteracao em wells no preprocessador
 %wells = [6490, 1,  301,  1,  0, 1;wells]
-%adeqPerm
+adeqPerm
+wells = [];
 %% Multiscale Solver
 
 meshAnalysis

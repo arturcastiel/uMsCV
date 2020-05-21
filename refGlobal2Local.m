@@ -1,14 +1,16 @@
 %this script finds the reference of the centers in the coarseelem
 
 refCenterInCoaseElem = zeros(npar,1);
-for ii = 1:size(coarseelem,1)
-    refCenterInCoaseElem(ii) = find(coarseelem{ii} == coarseElemCenter(ii));    
+for ii = 1:npar
+    set_elem = find(elemloc == ii);
+    refCenterInCoaseElem(ii) = find(set_elem == coarseElemCenter(ii));    
 end
 
 
  for ii = 1:npar
+     set_elem = find(elemloc == ii);
      dictionary(ii) = dict();
-     dictionary(ii).map = containers.Map(coarseelem{ii}',[1:size(coarseelem{ii},2)] );
+     dictionary(ii).map = containers.Map(set_elem,[1:size(set_elem,1)] );
  end
  
 

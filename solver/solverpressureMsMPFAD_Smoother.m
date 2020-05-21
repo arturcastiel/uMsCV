@@ -29,6 +29,8 @@ mobRegion = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mobility);
 auxflag = 0;
 % %OP_old
 OR  = genRestrictionOperator(size(elem,1), npar);
+
+
 if OP_old == -1;
     %OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
     [OP,CT] = genProlongationOperatorAMS(TransF, F);
@@ -37,13 +39,16 @@ else
     %OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
     [OP,CT] = genProlongationOperatorAMS(TransF, F);
 end
-%[ TransF, F] = globalmatrixmpfad_bc(TransF, F);
+%
+load('file.mat','AA','BB')
 
-for ii = find(refDir)'
-    Trans(ii,:) = 0;
-    Trans(ii, ii) = 1; 
-    F(ii) = 1;    
-end
+[ TransF, F] = globalmatrixmpfad_bc(TransF, F);
+[OP,CT] = genProlongationOperatorAMS(AA, F)
+% for ii = find(refDir)'
+%     Trans(ii,:) = 0;
+%     Trans(ii, ii) = 1; 
+%     F(ii) = 1;    
+% end
     
 po = TransF\F;
 

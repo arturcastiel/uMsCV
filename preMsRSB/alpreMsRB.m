@@ -1,9 +1,9 @@
 function [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary,H, outSupport , ...
-    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, coarse_element_bridge,  coarse_element_target] = alpreMsRB(npar,coarseelem, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
+    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = alpreMsRB(npar,coarseneigh, centelem, exinterface, multiCC, splitFlag)    
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 %finding neighbors 
-global intCoord elem coord inedge bedge esurn1 esurn2 elemloc edgesOnCoarseBoundary intinterface polyReg cReg
+global intCoord elem coord inedge bedge elemloc edgesOnCoarseBoundary polyReg cReg
 
 
 bcflag = multiCC;
@@ -228,7 +228,14 @@ end
     end
     
     
+%% creating edges ordering
 
+edges_ordering = zeros(size(elemloc));
+for ii = 1:size(coarse_strips,1)
+   edges_ordering(setdiff(coarse_strips{ii}, coarseElemCenter)) = ii;
+end
+
+    
 %% Creating interaction Region
 
 intRegion = cell(npar,1);
@@ -282,7 +289,7 @@ for jj = 1 : npar
     %outSupport{jj} = logical(setdiff(wholeSet, intRegion{jj}));
     %outSupport{jj} = setdiff(outSupport{jj},boundRegion{jj}); 
 end
-refGlobal2Local
+ refGlobal2Local
 
 end
 

@@ -1,5 +1,5 @@
 %%creates a matrix with all edges coarseedge
-global inedge bedge coord
+global inedge bedge coord coarseedge
 colormat = load('color.dat');
 
 disp('Plotando Coarse Mesh')

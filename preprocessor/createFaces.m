@@ -24,8 +24,11 @@ for index = 1:size(F,1)
         fElem(ii, flag(ii)) = index;
     end
 end
-a = unique(fElem);
-tmp = [a,histc(fElem(:),a)];
+
+a = setdiff(unique(fElem),0);
+tmpmat = fElem(:);
+tmpmat = tmpmat(tmpmat~=0);
+tmp = [a,histc(tmpmat,a)];
 bfaces =  (tmp(:,2) == 1);
 end
 
