@@ -3,7 +3,7 @@
 
 
 function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary,H, outSupport , ...
-   refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, edges_ordering]  = create_dualF(primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
+   refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, dualRegion, edges_ordering]  = create_dualF(primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
 %   Detailed explanation goes here
     global elem coord inedge bedge elemloc edgesOnCoarseBoundary
 
@@ -14,10 +14,10 @@ function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegio
     else
         bcflag = false;
     end
-    bcflag = false;
-    mdnode = false;
+    bcflag = true;
+    mdnode = true;
     correctionweightflag = false;
-    shortestflag = true;
+    shortestflag = false;
     icbflag = true;
     
     
@@ -199,20 +199,17 @@ end
         end
     end
    
-    
-     %% creating edges ordering
- 
- edges_ordering = zeros(size(elemloc));
- for ii = 1:size(coarse_strips,1)
-     edges_ordering(setdiff(coarse_strips{ii}, coarseElemCenter)) = ii;
- end
+
  
   %% finding boundary regions
   boundRegion = cell(npar,1);
   
   for ii =1:npar
-      nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
-      neigh_vol = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0);
+%       nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
+%       neigh_vol = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0);
+      nodes = setdiff(primal_forming.elem(ii,:),0);
+      neigh_vol = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),ii);
+      
       ref1 = all(ismember(coarse_element_bridge, neigh_vol),2);
       ref2 = any(coarse_element_bridge == ii,2);
       ref = (ref1 & ~ref2);
@@ -224,23 +221,30 @@ end
  if ~bcflag
      
     for ii = 1:npar
-      nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
+      nodes = setdiff(primal_forming.elem(ii,:),0);
       neigh_vol = setdiff(setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0),ii);       
       refB = ismember(elemloc(boundaryTarget),neigh_vol);
+      
       ref = primal_forming.bflag;
       ref(ref == true) = refB;
       nodeC = primal_forming.faces(ref,:);
+      
       refC = any(ismember(nodeC, nodes),2);
       refB(refB == true) = refC;
+      
+      
       boundRegion{ii} = setdiff(union(boundRegion{ii},   horzcat(bcoarse_strips{refB})' ),coarseElemCenter);      
       boundRegion{ii} = reshape(boundRegion{ii},1,[]);
     end
  end
- 
+%  
+for ii = 1:npar
+    boundRegion{ii} = setdiff(boundRegion{ii}, coarseElemCenter);
+end
 GlobalBoundary = false(size(elem,1),1);
 ref = unique(horzcat(boundRegion{:}));
 GlobalBoundary(ref) = true;
- 
+%  
 %  
  %% Creating interaction Region
  
@@ -249,7 +253,8 @@ GlobalBoundary(ref) = true;
  polyReg = cell(npar,1);
  cReg = cell(npar,1);
  for ii = 1:npar
-     nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
+     %nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
+     nodes = setdiff(primal_forming.elem(ii,:),0);   
      all_el = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0);
      cand_el = ismember(elemloc,all_el);
      cand_el(boundRegion{ii}) = false;
@@ -282,6 +287,25 @@ for jj = 1 : npar
     outSupport(:,jj) = ~ismember(wholeSet,intRegion{jj})';
 end
  refGlobal2Local
+ 
+ 
+ %% creating dual
+
+dualRegion = sparse(size(elem,1),npar);
+for ii = 1:npar
+   dualRegion(H{ii},ii) = 1; 
+   dualRegion(boundRegion{ii},ii) = 2;    
+end
+
+
+    
+     %% creating edges ordering
+ 
+ edges_ordering = zeros(size(elemloc));
+%  for ii = 1:size(coarse_strips,1)
+%      edges_ordering(setdiff(boundRegion{ii}, coarseElemCenter)) = ii;
+%  end
+
  
 end
  

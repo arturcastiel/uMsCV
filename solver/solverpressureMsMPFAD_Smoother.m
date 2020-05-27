@@ -31,19 +31,19 @@ auxflag = 0;
 OR  = genRestrictionOperator(size(elem,1), npar);
 
 
-if OP_old == -1;
-    %OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
-    [OP,CT] = genProlongationOperatorAMS(TransF, F);
-
-else
-    %OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
-    [OP,CT] = genProlongationOperatorAMS(TransF, F);
-end
+% if OP_old == -1;
+%     %OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
+%     [OP,CT] = genProlongationOperatorAMS(TransF, F);
+% 
+% else
+%     %OP =  genProlongationOperator(OP_old, TransFc, 2/3,300); 
+%     [OP,CT] = genProlongationOperatorAMS(TransF, F);
+% end
 %
-load('file.mat','AA','BB')
+%load('file.mat','AA','BB')
+[OP,CT] = genProlongationOperatorAMS(TransF, F);
 
 [ TransF, F] = globalmatrixmpfad_bc(TransF, F);
-[OP,CT] = genProlongationOperatorAMS(AA, F)
 % for ii = find(refDir)'
 %     Trans(ii,:) = 0;
 %     Trans(ii, ii) = 1; 

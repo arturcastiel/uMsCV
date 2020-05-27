@@ -1,8 +1,12 @@
 %% IMPES
 % Implicit Pressure , Explicit Saturation
 %vpi_vec = [ 0.1 0.4 0.5 0.9 1];
-global elem coord inedge pormap elemarea bedge centelem smetodo CFL ordem; Globals2D_CPR; 
-
+global elem coord inedge pormap elemarea bedge centelem smetodo CFL ordem Globals2D_CPR perm_matrix per_vec id_classify local_edges; 
+global edges
+%% pre ams
+[perm_matrix, nodes, edges, id_classify] = genPermMatrix();
+[local_edges] = split_edge(edges);
+    
 %% Saturation Preprocessor 
 [N,Fo,V,S_old,S_cont]=presaturation(wells);
 %%Calculating Fixed Parameters
@@ -25,7 +29,7 @@ vpi = totaltime(2);
 t_old = 0;
 step=0;
 time2=0;
-S = ones(nN,nE)*1e-6;
+%S = ones(nN,nE)*1e-6;
 %% exponente das permeabilidades relativas cuidado...! 
 nw=2;
 no=2;
@@ -33,23 +37,23 @@ no=2;
 % f = @(w) w.^2./(w.^2 + 0.25*(1 - w).^2);
 % df = @(w) (2.*w)./((w - 1).^2./4 + w.^2) - (w.^2.*((5.*w)./2 - 1./2))./((w - 1).^2./4 + w.^2).^2;
 %==========================================================================
-syms w 
-krw = ((w - satlimit(1))/(1-satlimit(1)-satlimit(2)))^nw; 
-kro= ((1 - w - satlimit(1))/(1-satlimit(1)-satlimit(2)))^no;
-Ff= (krw/visc(1))/(krw/visc(1) + kro/visc(2));  Fdf= diff(Ff,1);
-if strcmp(test,'five_spot_goe')||strcmp(test,'five_spot_Nikit_'), Ff = w^2; Fdf = 2*w; end
-f = inline(vectorize(simplify(Ff))); df= inline(vectorize(simplify(Fdf))); 
-%==========================================================================
+% syms w 
+% krw = ((w - satlimit(1))/(1-satlimit(1)-satlimit(2)))^nw; 
+% kro= ((1 - w - satlimit(1))/(1-satlimit(1)-satlimit(2)))^no;
+% Ff= (krw/visc(1))/(krw/visc(1) + kro/visc(2));  Fdf= diff(Ff,1);
+% if strcmp(test,'five_spot_goe')||strcmp(test,'five_spot_Nikit_'), Ff = w^2; Fdf = 2*w; end
+% f = inline(vectorize(simplify(Ff))); df= inline(vectorize(simplify(Fdf))); 
+% %==========================================================================
 %% Select Solution Method
-switch smetodo
-    case 'NDG'
-        % Build Lift Operator
-        [LIFT] = DGtoolsQuad.lift(NDG);
-    case {'fr','cpr'}
-        dg = CorrectionPolynomial('DGRight',P,pre_CPR.solutionPoints);
-        % Build Lift Operator
-        LIFT = DGtoolsQuad.liftFR(pre_CPR,dg);
-end
+% switch smetodo
+%     case 'NDG'
+%         % Build Lift Operator
+%         [LIFT] = DGtoolsQuad.lift(NDG);
+%     case {'fr','cpr'}
+%         dg = CorrectionPolynomial('DGRight',P,pre_CPR.solutionPoints);
+%         % Build Lift Operator
+%         LIFT = DGtoolsQuad.liftFR(pre_CPR,dg);
+% end
 %% este flag s� use quando o problema � Buckley-Leverett com fluxo imposto
 % na face com flag 202, por�m a satura��o ser� imposto na face
 auxflag=[0];

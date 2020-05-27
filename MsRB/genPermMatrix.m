@@ -1,4 +1,4 @@
-function [perm_matrix, per_vec, id_classify] = genPermMatrix()
+function [perm_matrix, nodes, edges, id_classify] = genPermMatrix()
 %genProlongationOperator Generates Prolongation Operator
     [id_classify, nodes, edges, internals] = createClassVec();
     [perm_matrix, per_vec] = createPerMat(id_classify);
@@ -6,7 +6,7 @@ end
 
 
 function [id_classify, nodes, edges, internals] = createClassVec()
-    global coarseElemCenter elemloc GlobalBoundary  inedge edges_ordering
+    global coarseElemCenter elemloc GlobalBoundary  inedge
     id_classify = zeros(size(elemloc));
     edges = false(size(elemloc));
     nodes = false(size(elemloc));
@@ -21,9 +21,9 @@ function [id_classify, nodes, edges, internals] = createClassVec()
     G = graph(auxmat(:,1) , auxmat(:,2));
     id_classify(transvec) = conncomp(G);
     max_id = max(id_classify);
-    id_classify(edges) = max_id + edges_ordering(edges);
-    max_id = max(id_classify);
-    id_classify(nodes) = max_id + 1;
+    id_classify(edges) = max_id + 1;% + edges_ordering(edges);
+    %max_id = max(id_classify);
+    id_classify(nodes) = max_id + 2;
 end
 
 function [matrix, r] = createPerMat(id_classify)

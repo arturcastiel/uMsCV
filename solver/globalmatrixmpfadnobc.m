@@ -122,7 +122,7 @@ for iface=1:size(inedge,1)
    
 end
 
-I 
+
 % % % adequa��o da matriz nos po�os produtores
 % if max(wells)~=0
 %     for iw = 1:size(wells,1)

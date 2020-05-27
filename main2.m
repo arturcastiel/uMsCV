@@ -13,14 +13,15 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering
+    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion
 
 global osMode dualAround
 osMode = 'windows';
-%nameFile = 'start_fivespot.dat';
-nameFile = 'start_darlan.dat';
+nameFile = 'start_fivespot.dat';
+
+%nameFile = 'start_darlan.dat';
 %nameFile = 'cond1.dat';
-nameFile = 'cond2.dat';
+%ameFile = 'cond2.dat';
 
 %nameFile = 'start_linear.dat';
 %nameFile = 'start_ameba.dat';
@@ -33,7 +34,7 @@ smetodo = 'FOU'
 mesh = 3;
 nx = 6;
 ny = 6;
-coarsemesh = 'coarse.msh';
+coarsemesh = 'coarse4.msh';
 %Globals2D_CPR;
 
 
@@ -124,9 +125,9 @@ if ~isempty(semiEdges)
 %     coarseElemCenter,refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht]   = preMsRB(npar,coarseneigh, centelem,coarseelem, ...
 %     coarseblockcenter,exinterface,multiCC);
 %% Alternative Multiscale Preprocessor 
-% tic;
+% tic;  
   [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
-      dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = dualDefine(3, primal_forming, primal, npar, coarseneigh, centelem, exinterface, multiCC, splitFlag)
+      dictionary,edgesCoarseDict,coarseDiricht, dualRegion, edges_ordering] = dualDefine(3, primal_forming, primal, npar, coarseneigh, centelem, exinterface, multiCC, splitFlag)
 % bold = 2;
 %  [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
 %      dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = alpreMsRB(npar, coarseneigh, centelem, exinterface, multiCC, splitFlag);
@@ -293,8 +294,8 @@ benchmark='gaowu9';
 %adeSPE
 %verficar a alteracao em wells no preprocessador
 %wells = [6490, 1,  301,  1,  0, 1;wells]
-adeqPerm
-wells = [];
+% adeqPerm
+% wells = [];
 %% Multiscale Solver
 
 meshAnalysis

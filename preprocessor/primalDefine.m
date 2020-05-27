@@ -14,6 +14,10 @@ function [forming_primal, primal] = primalDefine(flag)
         filename = coarsemesh;
         [forming_primal, primal] = gridpartition(filename);
         elemloc = primal.elemloc;
+        elemloc = graphIntegrity(elemloc);
+        npar = max(elemloc);
+
+
     end
     npar = max(elemloc);
 
