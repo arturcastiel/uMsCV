@@ -1,12 +1,12 @@
 
 
-%F = primal_forming.faces;
-F = forming_primal.faces;
+F = primal_forming.faces;
+%F = forming_primal.faces;
 
 %F = aa.faces;
 
-%tcoord = primal_forming.coord;
-tcoord = forming_primal.coord;
+tcoord = primal_forming.coord;
+%tcoord = forming_primal.coord;
 %tcoord = aa.coord;
 
 %bflag = primal_forming.bflag;
@@ -19,4 +19,6 @@ for ii = 1:size(F)
 end
 
 pcoord = primal_forming.coord(primal_forming.bnodes,:);
+pcoord = primal_forming.centelem;
+
 scatter(pcoord(:,1), pcoord(:,2));

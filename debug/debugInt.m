@@ -3,7 +3,7 @@
 debugTest3;
 % 1 17
 %ii = 3; %35
-ii = 1;
+ii = 15;
  jj = ii;
  
 %      1
@@ -24,15 +24,15 @@ colormat = load('color.dat');
 
 %meshplot(elem(intRegion{ii},1:4),coord(:,1),coord(:,2),'color', colormat(8,:), 'LineWidth' , 2.2);
 %meshplot(elem(:,1:4), coord(:,1), coord(:,2),'color',colormat(43,:), 'LineWidth' , 0.6);
-meshplot(elem(GlobalBoundary,1:4), coord(:,1), coord(:,2),'color',colormat(88,:), 'LineWidth' , 1.7);
+%meshplot(elem(GlobalBoundary,1:4), coord(:,1), coord(:,2),'color',colormat(88,:), 'LineWidth' , 1.7);
 
 %meshplot(elem(H{ii},1:4), coord(:,1), coord(:,2),'color',colormat(14,:), 'LineWidth' , 1.7);
 
-meshplot(elem(boundRegion{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
+%meshplot(elem(boundRegion{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
 %meshplot(elem(dualAround{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
 
 %meshplot(elem(coarseElemCenter(ii),1:4), coord(:,1), coord(:,2),'color',colormat(2,:), 'LineWidth' , 4.1);
-
+meshplot(elem(coarseElemCenter,1:4), coord(:,1), coord(:,2),'color',colormat(200,:), 'LineWidth' , 2.1);
 %quadmesh(elem(intRegion{ii},1:4),coord(:,1),coord(:,2),'color', colormat(8,:), 'LineWidth' , 1.2)
 
     % meshplot(elem([3075 3078 3087 3901 3007 2726 2728 2729 1347],1:4), coord(:,1), coord(:,2),'color',colormat(9,:), 'LineWidth' , 2.1);

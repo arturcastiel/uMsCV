@@ -13,7 +13,7 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion
+    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion perm_matrix
 
 global osMode dualAround
 osMode = 'windows';
@@ -34,7 +34,7 @@ smetodo = 'FOU'
 mesh = 3;
 nx = 6;
 ny = 6;
-coarsemesh = 'coarse4.msh';
+coarsemesh = 'coarse4x4.msh';
 %Globals2D_CPR;
 
 
@@ -110,6 +110,8 @@ multiCC = 1;
 splitFlag = 1;
 [primal_forming, primal] = primalDefine(pMethod);
 elemloc = graphIntegrity(elemloc);
+
+%elemloc(683) = 16;
 %% multiscale properties
  [ elemloc, npar,coarseelem, coarseedge,intinterface,exinterface,exinterfaceaxes,...
     numinterface,interfacecenter, coarseblockcenter, coarseneigh, intCoord, multiCC, ...

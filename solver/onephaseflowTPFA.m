@@ -1,5 +1,8 @@
 disp('TPFA Solver for Single Phase Flow')
 %find local references
+global id_classify
+[perm_matrix, nodes, edges, id_classify] = genPermMatrix();
+[local_edges, edges_inv] = split_edge(edges,perm_matrix);
 refGlobal2Local
 lastMethod = 1;
 tic
@@ -14,6 +17,7 @@ ii = 1: size(inedge,1);
 tEq = transEdge(KtL,KtR,HL,HR,faceDist);
 [TransF, F] = assemblyOnePhaseTPFA( coord, elem,bedge,inedge,bcflag,tEq ,Kbedge);
 
+[OP,CT] = genProlongationOperatorAMS(TransF, F);
 
 toc
 %pre condition matrix

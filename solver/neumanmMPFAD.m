@@ -2,11 +2,10 @@ function [ pms ] = neumanm(A,B, coarseelem , edgesOnCoarseBoundary, fluxMs,pc )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-global refCenterInCoaseElem npar inedge elemloc coarseelem dictionary coarseDiricht
+global refCenterInCoaseElem npar inedge elemloc coarseelem dictionary coarseDiricht coarseElemCenter
 
 pms = sparse(size(B,1),1);
 %%Adicionar a influência em ambos os lados do fluxo
-
 
 
 %%Separar em matrizes menores e resolver o sistema

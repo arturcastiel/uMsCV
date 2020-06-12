@@ -28,8 +28,9 @@ mobRegion = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mobility);
 % TransFc(1:size(TransFc,2)+1:end) = diag(TransFc) - sum(TransFc,2);
 auxflag = 0;
 % %OP_old
-OR  = genRestrictionOperator(size(elem,1), npar);
+%OR  = genRestrictionOperator(size(elem,1), npar);
 
+OR  = genRestrictionOperator();
 
 % if OP_old == -1;
 %     %OP =  genProlongationOperator(OR', TransFc, 2/3, 1800);
@@ -105,7 +106,7 @@ pd = OP*pc + CT;
 tic 
 
 C = CT\F;
-flagSuavizador = 'on';
+flagSuavizador = 'off';
 suavizador = 'SOR';
 Wf = 5/3;
 if strcmp(flagSuavizador, 'on')
@@ -230,6 +231,8 @@ iterativeRoutine
 %debugUncoupling
 
 % flowPd(abs(flowPd) < 0.00000001) = 0;
+% [~,ref] = sort(coarseElemCenter)
+%pc = pc(ref);
 pp =  neumanmMPFAD(TransFn,Fn, coarseelem , edgesOnCoarseBoundary, flowPd,pd );
 [flowPp, flowresult,velocity]=flowratePPMPFAD(pp,w,s,wsdynamic, Kde,Ded,Kn,Kt,Hesq,nflag,auxflag,mobility,mobRegion);
 % erro = max(abs(pd-pp)./max(pd))
