@@ -42,12 +42,31 @@ OR  = genRestrictionOperator();
 %     [OP,CT] = genProlongationOperatorAMS(TransF, F);
 % end
 %
+
+ if size(wells,2) > 1
+     ref = wells(:,5) > 400;
+end
 %load('file.mat','AA','BB')
+% disp('OP generation')
+% tic
+% [OP,CT] = genProlongationOperatorAMS(TransF, F);
+% toc
+[ TransF, F] = globalmatrixmpfad_bc(TransF, F);
+qq = TransF\F;
+[ TransF, F] = removeDirichlet(TransF,F);
+
+%TransF(ref,:) = 0;
+OR(:,wells(ref,1)) = 0;
+
+
 disp('OP generation')
 tic
+
+
+
 [OP,CT] = genProlongationOperatorAMS(TransF, F);
+OP(wells(ref,1),:) = 0;
 toc
-[ TransF, F] = globalmatrixmpfad_bc(TransF, F);
 % for ii = find(refDir)'
 %     Trans(ii,:) = 0;
 %     Trans(ii, ii) = 1; 
@@ -106,21 +125,27 @@ pc = ac\bc;
 % end
 pd = OP*pc + CT;
 
-% if size(wells,2) > 1
-%     ref = wells(:,5) > 400;
-%     % %testes
-%     pd(wells(ref,1)) = wells(ref,end);
-%     
-% end
+if size(wells,2) > 1
+    ref = wells(:,5) > 400;
+    pd(wells(ref,1)) = wells(ref,end);
+end
+
+
 %[ pm] = multiscaleScheme(An,Bn,TransF, F)
 
 %% Suavizador
 disp('Iterativo')
 tic 
 pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
+postprocessorTMS(full((pd)), full((pn)),0,superFolder,'multiscala01')
+
 toc
-% 11
+% 11    
 pd = pn;
+
+postprocessorTMS(full((OP*pc)), full((CT)),0,superFolder,'multiscala02')
+
+
 %C = CT\F;
 tempo = 0;
 v = 0;

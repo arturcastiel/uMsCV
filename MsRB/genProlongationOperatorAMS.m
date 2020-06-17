@@ -81,6 +81,8 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
     
     
     
+    %CT = [Ass\Qs - Ass\(Ase* (Mee\Qe)); Mee\Qe; sparse(npar,1) ];
+
     if type_flag == 0
         CT = [Ass\Qs - Ass\(Ase* (Mee\Qe)); Mee\Qe; sparse(npar,1) ];
     else

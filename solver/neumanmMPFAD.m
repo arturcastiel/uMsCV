@@ -19,7 +19,7 @@ for index = 1:npar
     peqA = peqA(:,coarseelem{index});
     peqB = B(coarseelem{index});
 
-    if sum(coarseDiricht == index) == 0
+    if sum(coarseDiricht == index) == 0 & (coarseDiricht ~= 0)
         
         %impondo dirichlet se os elementos nao estiverem na fronteira ja
         %com valor de dirichlet. problema ja bem posto
