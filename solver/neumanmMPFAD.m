@@ -34,11 +34,7 @@ for index = 1:npar
     
     
     peqSol =   peqA\peqB;
-    
-    if max(peqSol) > 1
-        1+1;
-    end
-    
+
     pms(coarseelem{index}) = peqSol;
 end
 

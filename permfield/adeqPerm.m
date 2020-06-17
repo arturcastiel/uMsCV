@@ -5,8 +5,7 @@
 % 1 - Monofasico do Mestrado do Fernando - Ativar o termo Fonte no Assembly
 % 2 - Bifasico Altamente Heterogeneo e Isotropico
 % 3 - Bifasico Aleatorio Chueh
-permFlag  = 1
-
+permFlag  = 3
 
 if permFlag == 1
     %global fontEach

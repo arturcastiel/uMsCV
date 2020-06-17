@@ -20,6 +20,7 @@ mobRegion = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mobility);
 %assembly da matriz
 %[ TransF, F] = globalmatrixmpfadn( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
 [ TransF, F] = globalmatrixmpfadnobc( w,s, Kde, Ded, Kn, Kt, nflag, Hesq,wells,mobility,fonte);
+
 %[perm_matrix, per_vec] = genPermMatrix();
 %%MultiScale
 %pre condition matrix 
@@ -42,19 +43,21 @@ OR  = genRestrictionOperator();
 % end
 %
 %load('file.mat','AA','BB')
+disp('OP generation')
+tic
 [OP,CT] = genProlongationOperatorAMS(TransF, F);
-
+toc
 [ TransF, F] = globalmatrixmpfad_bc(TransF, F);
 % for ii = find(refDir)'
 %     Trans(ii,:) = 0;
 %     Trans(ii, ii) = 1; 
 %     F(ii) = 1;    
 % end
-    
 po = TransF\F;
 
 %postprocessorOP(OP,0,superFolder,'Operadores');
 OP_old = OP;
+
 % 
 % %% wells treatment
 % if size(wells,2) > 1
@@ -68,10 +71,10 @@ OP_old = OP;
 % A = TransF; b = F;
 % ac = OR * A * OP; 
 % bc = OR * b; 
-A = TransF; b = F;
-ac = OR * A * OP; 
+%A = TransF; b = F;
+ac = OR * TransF * OP; 
 %bc = OR * b;
-bc = (OR * b) - OR*A*CT;
+bc = (OR * F) - OR*TransF *CT;
 %% 
 
 
@@ -102,115 +105,32 @@ pc = ac\bc;
 %     end
 % end
 pd = OP*pc + CT;
-%% Suavizador
-tic 
 
-C = CT\F;
-flagSuavizador = 'off';
-suavizador = 'SOR';
-Wf = 5/3;
-if strcmp(flagSuavizador, 'on')
-    if strcmp(suavizador, 'SOR')
-        L = tril(TransF, -1);
-        U = triu(TransF,  1);
-        D = diag(diag(TransF));
-        S = (D+Wf*L) + C;
-%         M = (D+Wf*L);
-        %suavizador =  '2_niveis';
-        if strcmp(suavizador, '2_niveis')
-            ac1 = OR * A * OP;
-            L1 = tril(ac1, -1) ;
-            U1 = triu(ac1,  1) ;
-            D1 = diag(diag(ac1)); Wc=2/3;
-            Sc = (D1+Wc*L1); % Suavizador na escala coarse
-            L2 = tril(A, -1) ;
-            U2 = triu(A,  1) ;
-            D2 = diag(diag(TransF)); Wf=1;
-            Sf = (D2+Wf*L2); % Suavizador na escala fina
-        end
-        
-    elseif strcmp(suavizador, 'ILU')
-        S = ilu(A);
-        
-   
-        if strcmp(suavizador, '2_niveis')
-            Sc = ilu(ac); % Suavizador na escala coarse
-            Sf = ilu(A); % Suavizador na escala fina
-        end
-    end
-%% Testar esses depois
-% [pc,fl1,rr1,it1,rv1]=bicgstab(ac,bc,1e-10,1000,S); % fun��o do pr�prio Matlab
-% [pc,fl1,rr1,it1,rv1]=gmres(ac,bc,10,1e-9,50,S1); % fun��o do pr�prio matlab
-%%
 % if size(wells,2) > 1
-%   pd(wells(ref,1)) = wells(ref,end);
+%     ref = wells(:,5) > 400;
+%     % %testes
+%     pd(wells(ref,1)) = wells(ref,end);
+%     
 % end
-%% Etapa iterativa
+%[ pm] = multiscaleScheme(An,Bn,TransF, F)
 
-pf = pd; % Entrada da etapa iterativa 
-rf = b - A * pf; 
-tol = 10^-3; v=0;
-erro=10^4;
-
-u = OP*(ac^-1)*OR;
-
-S = u + C  - (u*TransF*C);
-
-MetodoSuavizador = 'S_Multiescala';
-while max(abs(rf)) > tol
-    
-    if strcmp(MetodoSuavizador, 'S_Multiescala')
-    %--------Etapa multiescala------------
-        rc = OR * rf;
-        dpc = ac\rc;
-        dpf = OP * dpc; 
-        pff = pf + dpf;
-        rff = b - A * pff;
-    %---------Etapa de Suaviza��o---------
-
-            pf = pff + S\rff;
-      
-    elseif strcmp(MetodoSuavizador, '2_niveis')
-
-       pf3 = pf + Sf\(b - A*pf);
-       pf2 = pf3 + OP*(Sc\OR)*(b - A*pf3); 
-       pf = pf2 + Sf\(b - A*pf2);
-    elseif strcmp(MetodoSuavizador, 'Olav')
-% %--------------Olav--------------    
-       yrf = S\rf;
-       pf = pf + (OP*(ac\OR))*(rf-A*yrf)+yrf;
-%-------------Maliska---------------
-
-%     pf = (I-M*A)*pf + (I-(I-M*A))\(A*F);
-    end
-
-    rf = b - A * pf; 
-    
-    v=v+1;
-%     if abs(rf) <= tol 
-%     if v == 30
-    erro = sqrt(sum((rf).^2));
-    if erro <= tol 
-       break 
-    end
-%   pref = load('REF_P');  
-% Linf(v) = max(abs(pref.REF_P-pf))/max(abs(pref.REF_P)); L1(v) = sum(abs(pref.REF_P-pf))/sum(abs(pref.REF_P)); L2(v) = sqrt(sum((pref.REF_P-pf).^2))/sqrt(sum((pref.REF_P).^2));
- 
-end
-
-    tempo = toc;
-    pd = pf;
-
-end
-tempo = toc; v=1;
-
+%% Suavizador
+disp('Iterativo')
+tic 
+pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
+toc
+% 11
+pd = pn;
+%C = CT\F;
+tempo = 0;
+v = 0;
 %% Calculates the flow on the Edges of the Coarse Boundary
 %flowPd = flowrateMsMPFAD(edgesOnCoarseBoundary,pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
 [flowPd, flowresultPd,velocityPd]=calflowrateMPFADn(pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflag,auxflag,mobility);
 flowPd2 = flowPd( edgesOnCoarseBoundary + size(bedge,1));
 %[flowPd3, flowresultPd3,velocityPd3]=flowrateMPFAD(p,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
-poq = pd;
-iterativeRoutine
+%poq = pd;
+%iterativeRoutine
 %% Neuman
 %recalculating weights
 %tests replacing flowPd by velocityPd
@@ -267,137 +187,5 @@ disp([normError(pd, po ,2) , normError(pd, po ,inf)])
 ll = [npar pt nc bold kmap(end,end) normError(pd, po ,2) normError(pd, po ,inf)];
 dlmwrite('simuSingle.txt', full(ll),'-append')
 
-% 1+1;
-%pause
-%%
-
-% % incializando variaveis
-% % 
-% % flowrate=0;
-% % flowresult=0;
-% 
-% pressure=TransF\F;
-% 
-% [flowrate,flowresult]=calflowrateMPFAD(pressure,w,s,Kde,Ded,Kn,Kt,Hesq,nflag,auxflag,mobility);
-% 
-% 
-% residuo=0;
-% niteracoes=0;
-
-%apenas para metodos iterativos
-% switch metodoP
-%     
-%     case {'nlfvLPEW', 'nlfvDMPSY','nlfvDMPV1'}
-%         
-%         if strcmp(iteration,'iterpicard')
-%             
-%             [pressure,step,errorelativo,flowrate,flowresult]=iterpicard(M_old,RHS_old,nit,tol,kmap,...
-%                 parameter,metodoP,auxflag,w,s,nflagface,fonte,p_old,gamma,...
-%                 nflagno,benchmark,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             
-%         elseif strcmp(iteration,'iterbroyden')
-%             
-%             p_old1=M_old\RHS_old;
-%             
-%             % interpola��o nas faces
-%             [pinterp1]=pressureinterp(p_old1,nflagface,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             
-%             % calculo da matriz globlal inicial
-%             [M_old1,RHS_old1]=globalmatrix(p_old1,pinterp1,gamma,nflagface,nflagno,...
-%                 parameter,kmap,fonte,metodoP,w,s,benchmark,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             % residuo inicial
-%             R0_old=M_old1*p_old1-RHS_old1;
-%             
-%             % solver de press�o pelo m�todo Broyden
-%             [pressure,step,errorelativo,flowrate,flowresult]=iterbroyden(M_old,RHS_old,p_old,tol,kmap,parameter,...
-%                 metodoP,auxflag,w,s,nflagface,fonte,gamma,nflagno,benchmark,R0_old,p_old1,...
-%                 weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             
-%         elseif strcmp(iteration, 'iterdiscretnewton')
-%             
-%             p_old1=M_old\RHS_old;
-%             % interpola��o nos n�s ou faces
-%             [pinterp1]=pressureinterp(p_old1,nflagface,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             
-%             % calculo da matriz globlal inicial
-%             [M_old1,RHS_old1]=globalmatrix(p_old1,pinterp1,gamma,nflagface,nflagno,...
-%                 parameter,kmap,fonte,metodoP,w,s,benchmark,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             % resolvedor de press�o pelo m�todo de Newton-Discreto
-%             [pressure,step,errorelativo,flowrate,flowresult]=iterdiscretnewton(M_old,RHS_old,tol,kmap,...
-%                 parameter,metodoP,auxflag,w,s,nflagface,fonte,p_old,gamma,...
-%                 nflagno,benchmark,M_old1,RHS_old1,p_old1,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             
-%         elseif strcmp(iteration, 'iterhybrid')
-%             
-%             p_old1=M_old\RHS_old;
-%             
-%             % interpola��o nos n�s ou faces
-%             [pinterp1]=pressureinterp(p_old1,nflagface,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             
-%             % calculo da matriz globlal inicial
-%             [M_old1,RHS_old1]=globalmatrix(p_old1,pinterp1,gamma,nflagface,nflagno,...
-%                 parameter,kmap,fonte,metodoP,w,s,benchmark,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             % solver pressure pelo m�todo hybrido
-%             [pressure,step,errorelativo,flowrate,flowresult]=iterhybrid(M_old1,RHS_old1,tol,kmap,...
-%                 parameter,metodoP,auxflag,w,s,nflagface,fonte,p_old,gamma,...
-%                 nflagno,benchmark,p_old1,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%         elseif strcmp(iteration, 'JFNK')
-%             
-%             
-%             p_old1=M_old\RHS_old;
-%             % calculo do residuo
-%             R0=M_old*p_old-RHS_old;
-%             
-%             % interpola��o nos n�s ou faces
-%             [pinterp1]=pressureinterp(p_old1,nflagface,nflagno,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             
-%             % calculo da matriz globlal inicial
-%             [M_old1,RHS_old1]=globalmatrix(p_old1,pinterp1,gamma,nflagface,nflagno,...
-%                 parameter,kmap,fonte,metodoP,w,s,benchmark,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%             % calculo da press�o
-%             [pressure,step,errorelativo,flowrate,flowresult]= JFNK1(tol,kmap,parameter,metodoP,auxflag,w,s,nflagface,fonte,gamma,...
-%                 nflagno,benchmark,M_old1,RHS_old1,p_old1,R0,weightDMP,auxface,wells,mobility,Hesq, Kde, Kn, Kt, Ded);
-%             
-%         end
-%         
-%     case {'lfvHP','lfvLPEW','mpfad','tpfa'}
-%         
-%         pressure=M_old\RHS_old;
-%         if strcmp(metodoP, 'lfvHP')
-%             % interpola��o nos n�s ou faces
-%             [pinterp]=pressureinterp(pressure,nflagface,nflagno,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             % calculo das vaz�es
-%             [flowrate,flowresult]=flowratelfvHP(parameter,weightDMP,mobility,pinterp,pressure);
-%         elseif strcmp(metodoP, 'lfvLPEW')
-%             [pinterp]=pressureinterp(pressure,nflagface,nflagno,w,s,auxflag,metodoP,parameter,weightDMP,mobility);
-%             % calculo das vaz�es
-%             [flowrate,flowresult]=flowratelfvLPEW(parameter,weightDMP,mobility,pinterp,pressure);
-%         elseif  strcmp(metodoP, 'tpfa')
-%             [flowrate, flowresult]=flowrateTPFA(pressure,Kde,Kn,Hesq,nflag,mobility);
-%         else
-%             % calculo das vaz�es
-%             [flowrate,flowresult]=calflowrateMPFAD(pressure,w,s,Kde,Ded,Kn,Kt,Hesq,nflag,auxflag,mobility);
-%         end
-%         residuo=0;
-%         niteracoes=0;
-%         
-%         name = metodoP;
-%         X = sprintf('Calculo da press�o pelo m�todo: %s ',name);
-%         disp(X)
-%         
-%         x=['Residuo:',num2str(residuo)];
-%         disp(x);
-%         y=['N�mero de itera��es:',num2str(niteracoes)];
-%         disp(y);
-%         
-% end
 OP_old = OP;
 end

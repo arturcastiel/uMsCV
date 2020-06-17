@@ -14,9 +14,9 @@ function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegio
     else
         bcflag = false;
     end
-    onflag = false;
-    bcflag = false;
-    mdnode = false;
+    onflag = true;
+    bcflag = true;
+    mdnode = true;
     correctionweightflag = false;
     shortestflag = false;
     icbflag  = false;
