@@ -4,7 +4,7 @@
 global elem coord inedge pormap elemarea bedge centelem smetodo CFL ordem Globals2D_CPR perm_matrix per_vec id_classify local_edges; 
 global edges edges_inv
 %% pre ams
-[perm_matrix, nodes, edges, id_classify] = genPermMatrix();
+[perm_matrix, nodes, edges, id_classify, per_vec] = genPermMatrix();
 [local_edges, edges_inv] = split_edge(edges,perm_matrix);
     
 %% Saturation Preprocessor 

@@ -1,4 +1,4 @@
-function [perm_matrix, nodes, edges, id_classify] = genPermMatrix()
+function [perm_matrix, nodes, edges, id_classify, per_vec] = genPermMatrix()
 %genProlongationOperator Generates Prolongation Operator
     [id_classify, nodes, edges, internals] = createClassVec();
     [perm_matrix, per_vec] = createPerMat(id_classify);

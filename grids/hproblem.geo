@@ -1,11 +1,11 @@
 cl__1 = 1e+22;
-ep = 0;
+ep = 43;
 h = 0.5;
 x = 8;
 x = x + 1;
 // 2D mesh algorithm (1: MeshAdapt, 2: Automatic, 5: Delaunay, 6: Frontal-Delaunay, 7: BAMG, 8: Frontal-Delaunay for Quads, 9: Packing of Parallelograms)
-Mesh.Algorithm =9;
-//Mesh.CharacteristicLengthFactor = 10;
+Mesh.Algorithm =4;
+Mesh.CharacteristicLengthFactor = 8;
 qi = 0.5 - (h/2);
 qf = 0.5 + (h/2);
 Point(1) = {0, 0, 0, ep};
@@ -40,8 +40,8 @@ Line {8} In Surface {2};
 //Transfinite Line{4} = 7Using Progression 0.8696;
 
 
-Transfinite Line{1} = 6Using Progression 1.15;
-Transfinite Line{4} = 6Using Progression 0.8696;
+//Transfinite Line{1} = 6Using Progression 1.15;
+//Transfinite Line{4} = 6Using Progression 0.8696;
 
 
 
@@ -54,13 +54,13 @@ Transfinite Line{4} = 6Using Progression 0.8696;
 //Transfinite Line{2} = 6Using Progression 0.8696;
 //Transfinite Line{3} = 6Using Progression 1.15;
 
-Transfinite Line{1,2,3,4} = x Using Progression 1;
+//Transfinite Line{1,2,3,4} = x Using Progression 1;
 
 //Transfinite Line{2,3} = 6Using Progression 1.1;
-Transfinite Line{5,6,7,8} = (x ) Using Progression 1;
+//Transfinite Line{5,6,7,8} = (x ) Using Progression 1;
 //Transfinite Surface{1} = {1};
 //Transfinite Surface{1} = {1,2,3,4};
-Transfinite Surface{2} = {5,6,7,8};
+//Transfinite Surface{2} = {5,6,7,8};
 //Transfinite Line{1,3} = 4Using Progression 1;
 //Transfinite Line{2,4} = 4Using Progression 1;
 

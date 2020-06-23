@@ -64,10 +64,10 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
     elseif type_flag == 1
         Mtp = solveMeeAen(Mee,Aen);
         Btp = -Mtp;
-        Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2));        
+        %Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2));        
     elseif type_flag == 2
         [iMee] = finvMee(Mee);
-        [Aen] = fAee(Aen);
+        %[Aen] = fAee(Aen);
         Btp = -iMee*Aen;
         Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2));  
     end
@@ -77,7 +77,9 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
     B = [Ass\(Ase*(-Btp) - Asn) ; Btp; eye(npar,npar)];
 
    % B = [Ass\(Ase*Mtp - Asn) ; Btp; eye(npar,npar)];
-    OP = perm_matrix'*B;
+   %B = bsxfun(@rdivide, B(:,:) ,sum( B(:,:) ,2));        
+
+   OP = perm_matrix'*B;
     
     
     

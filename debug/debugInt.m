@@ -3,7 +3,7 @@
 debugTest3;
 % 1 17
 %ii = 3; %35
-ii = 15;
+ii = 16;
  jj = ii;
  
 %      1
@@ -28,7 +28,7 @@ colormat = load('color.dat');
 
 %meshplot(elem(H{ii},1:4), coord(:,1), coord(:,2),'color',colormat(14,:), 'LineWidth' , 1.7);
 
-%meshplot(elem(boundRegion{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
+meshplot(elem(boundRegion{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
 %meshplot(elem(dualAround{ii},1:4), coord(:,1), coord(:,2),'color',colormat(6,:), 'LineWidth' , 1.7);
 
 %meshplot(elem(coarseElemCenter(ii),1:4), coord(:,1), coord(:,2),'color',colormat(2,:), 'LineWidth' , 4.1);

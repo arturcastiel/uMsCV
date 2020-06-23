@@ -19,7 +19,9 @@ global osMode dualAround
 osMode = 'windows';
 nameFile = 'start_fivespot.dat';
 
-%nameFile = 'start_darlan.dat';
+nameFile = 'start_darlan.dat';
+nameFile = 'start_amoeba.dat';
+
 %nameFile = 'cond1.dat';
 %ameFile = 'cond2.dat';
 
@@ -34,7 +36,10 @@ smetodo = 'FOU'
 mesh = 3;
 nx = 6;
 ny = 6;
-coarsemesh = 'coarse4x4.msh';
+%coarsemesh = 'coarse3x3.msh';
+coarsemesh = 'coarse5x5.msh';
+coarsemesh = 'camoeba.msh';
+
 %Globals2D_CPR;
 
 
@@ -108,8 +113,13 @@ path(path,'iterative');
 multiCC = 1;
 
 splitFlag = 1;
+%[centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem,] = reordering(centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem, npar,coord);
+
 [primal_forming, primal] = primalDefine(pMethod);
 elemloc = graphIntegrity(elemloc);
+
+
+
 
 %elemloc(683) = 16;
 %% multiscale properties
@@ -296,7 +306,7 @@ benchmark='gaowu9';
 %adeSPE
 %verficar a alteracao em wells no preprocessador
 %wells = [6490, 1,  301,  1,  0, 1;wells]
-% adeqPerm
+adeqPerm
 % wells = [];
 %% Multiscale Solver
 

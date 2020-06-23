@@ -42,21 +42,28 @@ OR  = genRestrictionOperator();
 %     [OP,CT] = genProlongationOperatorAMS(TransF, F);
 % end
 %
-
  if size(wells,2) > 1
      ref = wells(:,5) > 400;
 end
+
 %load('file.mat','AA','BB')
 % disp('OP generation')
 % tic
-% [OP,CT] = genProlongationOperatorAMS(TransF, F);
 % toc
+tic
 [ TransF, F] = globalmatrixmpfad_bc(TransF, F);
-qq = TransF\F;
+%qq = TransF\F;
 [ TransF, F] = removeDirichlet(TransF,F);
+po = TransF\F;
 
-%TransF(ref,:) = 0;
-OR(:,wells(ref,1)) = 0;
+%TransF(wells(ref,1),:) = 0;
+
+[OP,CT] = genProlongationOperatorAMS(TransF, F);
+
+toc;
+
+%
+%OR(:,wells(ref,1)) = 0;
 
 
 disp('OP generation')
@@ -64,8 +71,7 @@ tic
 
 
 
-[OP,CT] = genProlongationOperatorAMS(TransF, F);
-OP(wells(ref,1),:) = 0;
+%OP(wells(ref,1),:) = 0;
 toc
 % for ii = find(refDir)'
 %     Trans(ii,:) = 0;
@@ -84,15 +90,11 @@ OP_old = OP;
 %     % %testes
 %      OP(wells(find(ref),1),:) = 0 ;
 % end
+
+%OP = bsxfun(@rdivide, OP(:,:) ,sum( OP(:,:) ,2)); 
+
  %% Precondicionador para resolver o sistema A*x=b
-% A = M\TransF; b =M\F;
-% A = M*TransF; b =M*F;
-% A = TransF; b = F;
-% ac = OR * A * OP; 
-% bc = OR * b; 
-%A = TransF; b = F;
 ac = OR * TransF * OP; 
-%bc = OR * b;
 bc = (OR * F) - OR*TransF *CT;
 %% 
 
@@ -124,7 +126,8 @@ pc = ac\bc;
 %     end
 % end
 pd = OP*pc + CT;
-
+%pd = OP*pc;
+%pd = OP*pc;
 if size(wells,2) > 1
     ref = wells(:,5) > 400;
     pd(wells(ref,1)) = wells(ref,end);
@@ -136,15 +139,15 @@ end
 %% Suavizador
 disp('Iterativo')
 tic 
-pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
-postprocessorTMS(full((pd)), full((pn)),0,superFolder,'multiscala01')
-
+% pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
+% pd = pn;
+postprocessorTMS(full((pd)), full((pd)),0,superFolder,'multiscala01')
+%pd = po
 toc
-% 11    
-pd = pn;
+
 
 postprocessorTMS(full((OP*pc)), full((CT)),0,superFolder,'multiscala02')
-
+%pd = OP*pc;
 
 %C = CT\F;
 tempo = 0;
@@ -178,7 +181,12 @@ flowPd2 = flowPd( edgesOnCoarseBoundary + size(bedge,1));
 % flowPd(abs(flowPd) < 0.00000001) = 0;
 % [~,ref] = sort(coarseElemCenter)
 %pc = pc(ref);
+
+
+
 pp =  neumanmMPFAD(TransFn,Fn, coarseelem , edgesOnCoarseBoundary, flowPd,pd );
+%pp =  neumanmMPFAD2(TransFn,Fn,pd );
+
 [flowPp, flowresult,velocity]=flowratePPMPFAD(pp,w,s,wsdynamic, Kde,Ded,Kn,Kt,Hesq,nflag,auxflag,mobility,mobRegion);
 % erro = max(abs(pd-pp)./max(pd))
 % pause(1.5)
@@ -188,9 +196,8 @@ pp =  neumanmMPFAD(TransFn,Fn, coarseelem , edgesOnCoarseBoundary, flowPd,pd );
 
 flowPms = compoundFlow( flowPp,flowPd2, size(bedge,1) );
 %flowPms(abs(flowPms) < 0.00000001) = 0;
+postMPFA
 
-
-%postMPFA
 flowrate = flowPms;
 pressure = pd;
 
@@ -202,13 +209,14 @@ pressure = pd;
 % ooo = find(abs(flowresultPn) > 0.0000001);
 flowresult = fluxSummation(flowPms);
 consTestMpfa
-
+postprocessorTMS(full(pd),full(pp),0,superFolder,'Neummna');
 if bold == 1
     postprocessorTMS(full(pd),full(po),0,superFolder,'Primeiro');
 elseif bold == 2
     postprocessorTMS(full(pd),full(po),0,superFolder,'Segundo');
 end
 disp([normError(pd, po ,2) , normError(pd, po ,inf)])
+disp([normError(pp, po ,2) , normError(pp, po ,inf)])
 ll = [npar pt nc bold kmap(end,end) normError(pd, po ,2) normError(pd, po ,inf)];
 dlmwrite('simuSingle.txt', full(ll),'-append')
 

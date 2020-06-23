@@ -1218,9 +1218,11 @@ end  %End of FOR (Swept each row of "elem")
 %It clears the vector "iinrow" and another
 clear iinrow pointvertdone esurnqnt esurn2aux;
 
+
 %Gives the information of "esurn" generated
 disp('"esurn" was generated!');
 
+%debugCon
 
 %--------------------------------------------------------------------------
 %"nsurn" vectors - Report the amount of NODES surronding each NODE.
@@ -1342,6 +1344,13 @@ clear nsurn1aux;
 %Gives the information of "nsurn" generated
 disp('"nsurn" was generated!');
 
+%% teste ordenamento
+
+%debugCon
+
+%% reoordering elements
+%[centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem,wells] = reordering(centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem, npar,coord,wells);
+
 %--------------------------------------------------------------------------
 %Get the position of "bedge" and "inedge" rows.
 
@@ -1353,16 +1362,14 @@ rowposit = getrowposition(bedge,inedge,nsurn1,nsurn2);
 %face) neighbor
 
 %% DESABILITAR PARA TESTAR
-
-[esureface1,esureface2,esurefull1,esurefull2] = getesure(elem,...
-    size(bedge,1),inedge,esurn1,esurn2,nsurn2,rowposit);
-
+% [esureface1,esureface2,esurefull1,esurefull2] = getesure(elem,...
+%     size(bedge,1),inedge,esurn1,esurn2,nsurn2,rowposit);
 
 %[esureface1,esureface2,esurefull1,esurefull2] = [ 0,0,0,0]; 
-%  esureface1 = [];
-%  esureface2 = [];
-%  esurefull1 = [];
-%  esurefull2 = [];
+ esureface1 = [];
+ esureface2 = [];
+ esurefull1 = [];
+ esurefull2 = [];
 %%
 %Gives the information of "nsurn" generated
 disp('"esure" were generated!');

@@ -1,4 +1,4 @@
-global inedge bedge coord intinterface exinterfaceaxes exinterface
+global inedge bedge coord intinterface exinterfaceaxes exinterface elemloc
 tic
 %[flowTr, flowresult,velocity]=flowrateMPFAD(pd,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
 flowTr = flowPms;

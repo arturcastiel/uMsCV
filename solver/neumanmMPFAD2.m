@@ -1,31 +1,26 @@
-function [ pms ] = neumanm(A,B, coarseelem , edgesOnCoarseBoundary, fluxMs,pc )
+function [ pms ] = neumanmMPFAD2(A,B, pc )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-global refCenterInCoaseElem npar inedge elemloc coarseelem dictionary coarseDiricht coarseElemCenter
+global refCenterInCoaseElem npar  elemloc coarseDiricht 
 
 pms = sparse(size(B,1),1);
 %%Adicionar a influência em ambos os lados do fluxo
 
 
-
-%NAO SE USA DUAS CONDICOES DE DIRICHLET 
-% A CONDICAO DE DIRICHLET EH IMPOSTA AUTOMATICAMENTE
-%PORTANTO DEVE-SE RETIRAR A IMPOSICAO DA CONDICAO DE DIRICHLET NOS VERTICES
-%NESTES ELEMENTOS
 %%Separar em matrizes menores e resolver o sistema
 
 for index = 1:npar    
-    if index == 16
-        1
-    end
-    ce=coarseelem{index};
-    peqA = A(coarseelem{index},:);
-    peqA = peqA(:,coarseelem{index});
-    peqB = B(coarseelem{index});
+%     if index == 1
+%         1
+%     end
+    ce  = elemloc ==index;
+    peqA = A(ce,:);
+    peqA = peqA(:,ce);
+    peqB = B(ce);
 
-   % if sum(coarseDiricht == index) == 0 & (coarseDiricht ~= 0)
-    if ~coarseDiricht(index)
+    if sum(coarseDiricht == index) == 0 & (coarseDiricht ~= 0)
+        
         %impondo dirichlet se os elementos nao estiverem na fronteira ja
         %com valor de dirichlet. problema ja bem posto
         peqA(refCenterInCoaseElem(index),:) = 0;
@@ -40,7 +35,7 @@ for index = 1:npar
     
     peqSol =   peqA\peqB;
 
-    pms(coarseelem{index}) = peqSol;
+    pms(ce) = peqSol;
 end
 
 %%Adicionar as influências das vazoes calculadas

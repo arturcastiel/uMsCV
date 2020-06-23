@@ -10,6 +10,13 @@ mobility((size(bedge,1)+1):(size(inedge,1)+size(bedge,1)),1)=auxmobility1;
 
 M=sparse(size(elem,1),size(elem,1)); %Prealoca��o de M.
 I=sparse(size(elem,1),1);
+
+ref1 =    (centelem(:, 1) <  5/8) & (centelem(:, 1) >  3/8);
+ref2 =    (centelem(:, 2) <  5/8) & (centelem(:, 2) >  3/8);
+ref = ref1 & ref2;
+
+I(ref) =I(ref) +  elemarea(ref)./ sum(elemarea(ref));
+
 % % fonte
 %add para teste
 % fonte = sparse(size(elem,1),1);

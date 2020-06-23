@@ -11,7 +11,7 @@ function [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion
         %modArt
         
      [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
-         dictionary,edgesCoarseDict,coarseDiricht, dualRegion, edges_ordering] = create_dualF(primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag)  
+         dictionary,edgesCoarseDict,coarseDiricht, dualRegion, edges_ordering] = create_dualF(primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag);  
 %         
 %      [coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary, H, outSupport, refCenterInCoaseElem, ...
 %          dictionary,edgesCoarseDict,coarseDiricht, edges_ordering] = smartDual(npar,primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag)  
