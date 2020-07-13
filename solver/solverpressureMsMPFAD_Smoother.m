@@ -139,8 +139,8 @@ end
 %% Suavizador
 disp('Iterativo')
 tic 
-% pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
-% pd = pn;
+pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
+pd = pn;
 postprocessorTMS(full((pd)), full((pd)),0,superFolder,'multiscala01')
 %pd = po
 toc
@@ -196,7 +196,7 @@ pp =  neumanmMPFAD(TransFn,Fn, coarseelem , edgesOnCoarseBoundary, flowPd,pd );
 
 flowPms = compoundFlow( flowPp,flowPd2, size(bedge,1) );
 %flowPms(abs(flowPms) < 0.00000001) = 0;
-postMPFA
+%postMPFA
 
 flowrate = flowPms;
 pressure = pd;

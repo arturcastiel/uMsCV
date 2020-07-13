@@ -14,6 +14,7 @@ function [pressure,errorelativo,flowrate,flowresult,RHS_old,q]=solverpressure(km
 errorelativo=0;
 w=0;
 s=0;
+
 [w,s]=Pre_LPEW_2T(kmap,mobility,V,S_old,nw,no,N);
 
 

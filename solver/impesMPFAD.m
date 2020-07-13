@@ -8,11 +8,12 @@ global edges edges_inv
 [local_edges, edges_inv] = split_edge(edges,perm_matrix);
     
 %% Saturation Preprocessor 
-[N,Fo,V,S_old,S_cont]=presaturation(wells);
+nflagno= contflagnoN(bedge);
+[N,Fo,V,S_old,S_cont]=presaturation(wells,nflagno);
 %%Calculating Fixed Parameters
 [Hesq, Kde, Kn, Kt, Ded] = Kde_Ded_Kt_Kn(kmap);
 fonte=0;
-nflagno= contflagnoN(bedge);
+
 % global bnodes
 % nflagno(bnodes,1) = 101;
 % nflagno(bnodes,2) = 0;

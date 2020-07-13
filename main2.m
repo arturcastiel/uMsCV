@@ -19,7 +19,7 @@ global osMode dualAround
 osMode = 'windows';
 nameFile = 'start_fivespot.dat';
 
-nameFile = 'start_darlan.dat';
+%nameFile = 'start_darlan.dat';
 nameFile = 'start_amoeba.dat';
 
 %nameFile = 'cond1.dat';
@@ -38,7 +38,7 @@ nx = 6;
 ny = 6;
 %coarsemesh = 'coarse3x3.msh';
 coarsemesh = 'coarse5x5.msh';
-coarsemesh = 'camoeba.msh';
+coarsemesh = 'camoeba3.msh';
 
 %Globals2D_CPR;
 
@@ -105,7 +105,7 @@ path(path,'iterative');
     [coord,centelem,elem,esurn1,esurn2,nsurn1,nsurn2,bedge,inedge,...
     normals,esureface1,esureface2,esurefull1,esurefull2,elemarea,dens,visc,...
     satlimit,pormap,bcflag,courant,totaltime,numcase,phasekey,kmap,...
-    wells,elemloc,npar,coarseelem, ghostelem, multiCC,pmethod,mshfile, keymsfv,interptype,keypath1 ] = preprocessor;
+    wells,elemloc,npar,coarseelem, ghostelem, multiCC,pmethod,mshfile, keymsfv,interptype,keypath1 ] = preprocessorM;
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
@@ -306,7 +306,7 @@ benchmark='gaowu9';
 %adeSPE
 %verficar a alteracao em wells no preprocessador
 %wells = [6490, 1,  301,  1,  0, 1;wells]
-adeqPerm
+%adeqPerm
 % wells = [];
 %% Multiscale Solver
 

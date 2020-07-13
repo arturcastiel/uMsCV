@@ -18,6 +18,7 @@ for iface=1:(size(bedge,1)+size(inedge,1))
         dx = norm(xI - xJ);
         if abs(S_old(lef)-S_old(rel))<TOL
         else
+            %iface
             alpha = abs((influx(iface)/A)*(f_elem(lef)-f_elem(rel))/(S_old(lef)-S_old(rel)));
             dt_local = abs((CFL/((2*n) + 1))*pormap(1)*dx/alpha);
         end

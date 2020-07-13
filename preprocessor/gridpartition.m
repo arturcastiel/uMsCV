@@ -4,14 +4,14 @@ function [forming_primal, primal] = gridpartition(filename)
     [forming_primal] = create_forming_primal(filename);
     [primal] = create_primal(forming_primal);
     %aa = createfdual(forming_primal);
-%     F = primal.faces;
-%     tcoord = primal.coord;
-%     % F = coarse.faces;
-%     % tcoord = coarse.coord;
+%     F = forming_primal.faces;
+%     tcoord = forming_primal.coord;
+    % F = coarse.faces;
+    % tcoord = coarse.coord;
 %     for ii = 1:size(F)
 %        drawLine(F(ii,1), F(ii,2), tcoord)
 %     end
-    %[forming_primal, primal] = createfdual(forming_primal);
+%     %[forming_primal, primal] = createfdual(forming_primal);
 
 end
 

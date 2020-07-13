@@ -913,6 +913,8 @@ centelem = getcentelem(coord,elem);
 %Gives the information of "elem" generated
 disp('"centelem" was generated!');
 
+[ elem ] = reordnodelem( elem, centelem, coord );
+%
 %--------------------------------------------------------------------------
 %"elemarea" vector - It get the area for each control volume 
 
@@ -953,6 +955,8 @@ end  %End of IF
 
 %Gives the information of "normals" generated
 disp('"normals" was generated!');
+
+
 
 
 

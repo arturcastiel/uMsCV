@@ -19,13 +19,13 @@ copyfile(strr,superFolder)
 copyfile('iterative/iterativeRoutine.m',superFolder)
 
 % % %%  ms MPFAD
-  vpi_vec = vpi_vecF;
-  impesMPFAD2
+%   vpi_vec = vpi_vecF;
+%   impesMPFAD2
 
 %% starting simulation
 % % regular MPFAD
-%   vpi_vec = vpi_vecF;
-%  impes
+  vpi_vec = vpi_vecF;
+ impes
 
 
 

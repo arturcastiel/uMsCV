@@ -10,10 +10,7 @@ for No=1:size(coord,1)
     % P--> coordenadas dos vértices na vizinhança do nó "No"
     % T--> coordenadas dos pontos medios nas vizinhas ao nó "No"
     % Qo-> coordenada do nó em questão
-    %tranquilo
-%     if No == 66 
-%         1+1
-%     end
+
 	[ O, P, T, Qo ] = OPT_Interp_LPEW(No);
     % calcula os angulos apropiados para calculas os pesos
     

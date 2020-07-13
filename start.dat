@@ -287,7 +287,7 @@ C:\Users\artur\project\uMsCV\grids
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-amoeba.msh
+amoebaT.msh
 
 //If [n], write below the path where the geometry file is:  
 
@@ -586,7 +586,7 @@ n
 //(Dirichlet, Neumann or Periodic);
 //3. In the same row, put the algebric value of this BC.  
 
-2
+1
 201 0
 
 
@@ -676,6 +676,7 @@ pvi
 //if you write "0" replacing the number of wells, it will be not 
 //necessary to erase the numbers below. Keep it to reference.  
 
-0
-1 0 0 0.025 301 1 0 1 0
-1 1 1 0.025 0 0 501 0 0
+3
+1 0.3 0.3 0.025 301 1 0 1 0
+1 1.7 0.5 0.025 302 1 0 1 0
+1 0.9 0.45 0.025 0 0 501 0 0

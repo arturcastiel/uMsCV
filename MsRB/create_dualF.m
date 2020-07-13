@@ -14,11 +14,11 @@ function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegio
     else
         bcflag = false;
     end
-    onflag = true;
-    bcflag = false;
-    mdnode = false;
+    onflag = false;
+    bcflag = true;
+    mdnode = true;
     correctionweightflag = false;
-    shortestflag = false;
+    shortestflag = true;
     icbflag  = false;
     
     
@@ -43,14 +43,29 @@ function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegio
                     p2 = primal_forming.coord(nodes(2),:);
                     point = (p1 + p2)*0.5;
                 end
-                ref = elemloc == ii;
+                
+                refA = elemloc(bedge(:,3)) == ii;               
+                if sum(refA) ~= 0
+                    ref = false(size(elemloc));
+                    ref(bedge(refA,3)) = true;
+                else
+                    ref = elemloc == ii;
+                end
                 ref(ref) = minDis(point , centelem(ref,1:2));
                 coarseElemCenter(ii) = find(ref);
+           
+            
             elseif (sum(primal_forming.bnodes(setdiff(primal_forming.elem(ii,:),0))) == 1) && onflag
                     nodes = setdiff(primal_forming.elem(ii,:),0);
                     ref = primal_forming.bnodes(nodes);
                     point = primal_forming.coord(nodes(ref),:);
-                    ref = elemloc == ii;
+                    refA = elemloc(bedge(:,3)) == ii;               
+                    if sum(refA) ~= 0
+                        ref = false(size(elemloc));
+                        ref(bedge(refA,3)) = true;
+                    else
+                        ref = elemloc == ii;
+                    end
                     ref(ref) = minDis(point , centelem(ref,1:2));
                     coarseElemCenter(ii) = find(ref);
             end

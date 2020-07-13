@@ -4,14 +4,14 @@
 
 %vpi_vec = [ 0.1 0.4 0.5 0.9 1];
 
-
+nflagno= contflagnoN(bedge);
 %% Saturation Preprocessor 
-[N,Fo,V,S_old,S_cont]=presaturation(wells);
+[N,Fo,V,S_old,S_cont]=presaturation(wells,nflagno);
 
 %%Calculating Fixed Parameters
 [Hesq, Kde, Kn, Kt, Ded] = Kde_Ded_Kt_Kn(kmap);
 fonte=0;
-nflagno= contflagnoN(bedge);
+
 %[w,s]=Pre_LPEW_2(kmap,N);
 
 
@@ -64,8 +64,11 @@ while vpi_old < vpi %true
     
     %% caculo do passo de tempo
     % order sempre = 1
-    d_t=steptime(f_elem,S_old,flowrate,CFL,S_cont,auxflag,nw,no); %,order);
+    d_t=steptime(f_elem,S_old,flowrate,CFL,S_cont,auxflag,nw,no,1); %,order);
+ 
+    disp(d_t)
     
+    %d_t = d_t/2;
     %% calculo da satura��o explicito
     %nao usar - isso
     %esuel1 weightLS,bound,upsilon,kappa, smetodo,tordem,
@@ -73,12 +76,14 @@ while vpi_old < vpi %true
 %         f_elem,S_cont,weightLS,bound,smetodo,tordem,...
 %         upsilon,kappa,nw,no,auxflag);
     
-        [S_old]= firstorderstandard(S_old,flowrate,flowresult,f_elem,d_t,wells,S_cont,auxflag,nw,no);
+%        [S_old]= firstorderstandard(S_old,flowrate,flowresult,f_elem,d_t,wells,S_cont,auxflag,nw,no);
         
 %         bflux = flowrate(1:size(bedge,1));
 %         influx = flowrate(size(bedge,1)+1:end);
 %         
-%         %[S_old] = firstorderstdseqimp(S_old,influx,bflux,d_t,wells,q,nw,no);
+         bflux = flowrate(1:size(bedge,1));
+        influx = flowrate(size(bedge,1)+1:end);
+       [S_old] = firstorderstdseqimp(S_old,influx,bflux,d_t,wells,q,nw,no);
 %         [S_old,d_t] = firstorderstdseqimp(S_old,influx,bflux,d_t,wells,flowresult,nw,no);
         X = sprintf('Calculo do campo de satura��o pelo m�todo: %s\nPasso de tempo: %d\n ---------------------------------','FOU',cont);
         disp(X)
