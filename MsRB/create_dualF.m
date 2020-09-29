@@ -5,7 +5,7 @@
 function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegion, intRegion, GlobalBoundary,H, outSupport , ...
    refCenterInCoaseElem, dictionary,edgesCoarseDict,coarseDiricht, dualRegion, edges_ordering]  = create_dualF(primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag)    
 %   Detailed explanation goes here
-    global elem coord inedge bedge elemloc edgesOnCoarseBoundary
+    global elem coord inedge bedge elemloc edgesOnCoarseBoundary I
 
     %[npar,primal_forming, primal, coarseneigh, centelem, exinterface, multiCC, splitFlag]
     
@@ -15,10 +15,10 @@ function  [ coarseElemCenter, coarse_interface_center, coarse_strips, boundRegio
         bcflag = false;
     end
     onflag = false;
-    bcflag = true;
-    mdnode = true;
+    bcflag = false;
+    mdnode = false;
     correctionweightflag = false;
-    shortestflag = true;
+    shortestflag = false;
     icbflag  = false;
     
     
@@ -198,7 +198,7 @@ end
                 ccell = elemloc(boundaryTarget(ii));
                 center = coarseElemCenter(ccell);
                 target = boundaryTarget(ii);
-                p1 = centelem(center,1:2);
+                p1 = centelem(center,1:2);  
                 p2 = centelem(target,1:2);
                 easy_dist = all(ismember( inedge(:,3:4), find(lineCross(1:size(elem,1), p1,p2))),2);
                 ldist = dist;
@@ -266,26 +266,38 @@ GlobalBoundary(ref) = true;
  
  intRegion = cell(npar,1);
  
- polyReg = cell(npar,1);
- cReg = cell(npar,1);
- for ii = 1:npar
-     %nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
-     nodes = setdiff(primal_forming.elem(ii,:),0);   
-     all_el = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0);
-     cand_el = ismember(elemloc,all_el);
-     cand_el(boundRegion{ii}) = false;
-     ref = all(ismember(inedge(:,3:4), find(cand_el)),2);
-     auxmat = inedge(ref,3:4);
-     transvec = unique(auxmat);
-     transback = zeros(size(elem,1),1);
-     transback(transvec) = 1:size(transvec,1);
-     auxmat = transback(auxmat);
-     G = graph(auxmat(:,1), auxmat(:,2));
-     con_comp = conncomp(G);
-     ref_el = (con_comp == con_comp(transback(coarseElemCenter(ii))));
-     intRegion{ii} = transvec((ref_el));
- end
+ %% mexendo aqui - erro
+I  =   graphGrowthInt(coarseElemCenter, boundRegion) ;
  
+ %%
+%  polyReg = cell(npar,1);
+%  cReg = cell(npar,1);
+%  for ii = 1:npar
+%      %nodes = setdiff(setdiff(primal_forming.elem(ii,:),0),ii);
+%      nodes = setdiff(primal_forming.elem(ii,:),0);   
+%      all_el = setdiff(find(any(ismember(primal_forming.elem,nodes),2)),0);
+%      cand_el = ismember(elemloc,all_el);
+%      cand_el(boundRegion{ii}) = false;
+%      ref = all(ismember(inedge(:,3:4), find(cand_el)),2);
+%      auxmat = inedge(ref,3:4);
+%      transvec = unique(auxmat);
+%      transback = zeros(size(elem,1),1);
+%      transback(transvec) = 1:size(transvec,1);
+%      auxmat = transback(auxmat);
+%      G = graph(auxmat(:,1), auxmat(:,2));
+%      con_comp = conncomp(G);
+%      ref_el = (con_comp == con_comp(transback(coarseElemCenter(ii))));
+%      intRegion{ii} = transvec((ref_el));
+%  end
+%  
+for ii = 1:npar
+    intRegion{ii} = find(I(:,ii));
+end
+[~, ref] = sort(coarseElemCenter);
+I = I(:, elemloc(coarseElemCenter(ref))');
+
+
+
 for ii = 1:npar
     intRegion{ii} = setdiff(intRegion{ii}, coarseElemCenter);
 end

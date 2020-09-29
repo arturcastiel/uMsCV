@@ -937,6 +937,15 @@ disp('"elemarea" was generated!');
     intnode,flaglim,verifymshfile,bcflag,meshtype);
 
 
+% ref1 = inedge(:,3) == 0;
+% ref2 = inedge(:,4) == 0;
+% ref = ref1 | ref2;
+% inedge(ref,:) = [];
+% 
+% aa = [inedge(ref1,1:3) 201*ones(sum(ref1),1),201*ones(sum(ref1),1) ];
+% bb = [inedge(ref2,1:2) inedge(ref2,4) 201*ones(sum(ref2),1),201*ones(sum(ref2),1) ];
+% bedge = [bedge; aa ; bb];
+% inedge(ref,:) = [];
 %Gives the information of "bedge" and "inedge" generated
 disp('"bedge" was generated!');
 disp('"inedge" was generated!');
@@ -1357,7 +1366,10 @@ disp('"nsurn" was generated!');
 %Get the position of "bedge" and "inedge" rows.
 
 %It has a structure similar to "nsurn1"
-rowposit = getrowposition(bedge,inedge,nsurn1,nsurn2);
+%rowposit = getrowposition(bedge,inedge,nsurn1,nsurn2);
+%% remarcar aqui
+% nsurn1 = [];
+% nsurn2 = [];
 
 %--------------------------------------------------------------------------
 %Generate "esureface" (face neighbor element) and "esurefull" (vertices and 

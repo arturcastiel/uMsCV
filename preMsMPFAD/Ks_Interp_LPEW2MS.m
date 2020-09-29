@@ -42,6 +42,7 @@ j =  eOrd(k);
             Kt1(k,i)=((R*(T(1,:)-Qo)')'*K*(T(1,:)-Qo)')/norm(T(1,:)-Qo)^2;
         %nos estam em algum tipo de fronteira
         else
+            
             K(1,1)=mobility(Vregion(i,k,ni,region))*kmap(elem(j,5),2);
             K(1,2)=mobility(Vregion(i,k,ni,region))*kmap(elem(j,5),3);
             K(2,1)=mobility(Vregion(i,k,ni,region))*kmap(elem(j,5),4);

@@ -13,14 +13,18 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     intRegion   boundRegion GlobalBoundary H outSupport coarseElemCenter ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
-    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion perm_matrix
+    coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion perm_matrix internal_split
 
 global osMode dualAround
 osMode = 'windows';
 nameFile = 'start_fivespot.dat';
+nameFile = 'start_cross.dat';
+%nameFile = 'start_furo.dat';
+%nameFile = 'start_brazil.dat';
 
 %nameFile = 'start_darlan.dat';
-nameFile = 'start_amoeba.dat';
+%nameFile = 'start_amoeba.dat';
+%nameFile = 'start_kanji.dat';
 
 %nameFile = 'cond1.dat';
 %ameFile = 'cond2.dat';
@@ -36,9 +40,30 @@ smetodo = 'FOU'
 mesh = 3;
 nx = 6;
 ny = 6;
-%coarsemesh = 'coarse3x3.msh';
-coarsemesh = 'coarse5x5.msh';
-coarsemesh = 'camoeba3.msh';
+coarsemesh = 'coarse3x3.msh';
+coarsemesh = 'coarse4x4.msh';
+%coarsemesh = 'coarse5x5.msh';
+
+%coarsemesh = 'coarse4.msh';
+%coarsemesh = 'coarse.msh';
+
+%coarsemesh = 'coarsedarlan.msh';
+%coarsemesh = 'coarsedarlantop2.msh';
+%coarsemesh = 'coarsedarlantop4.msh';
+
+
+%coarsemesh = 'coarsedarlan3.msh';
+%coarsemesh = 'coarseartur.geo.msh';
+%coarsemesh = 'camoeba3.msh';
+%coarsemesh = 'kanjic2.msh';
+%coarsemesh = 'crossc1.msh';
+
+%%estes aqui
+%coarsemesh = 'crosscM2.msh';
+%coarsemesh = 'crossN1.msh';
+
+%coarsemesh = 'furoC.msh';
+%coarsemesh = 'brazilC2.msh';
 
 %Globals2D_CPR;
 
@@ -115,11 +140,10 @@ multiCC = 1;
 splitFlag = 1;
 %[centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem,] = reordering(centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem, npar,coord);
 
-[primal_forming, primal] = primalDefine(pMethod);
-elemloc = graphIntegrity(elemloc);
-
-
-
+[primal_forming, primal,elemloc1,elemloc2] = primalDefine(pMethod);
+%elemloc = graphIntegrity(elemloc);
+%elemloc = graphIntegrity(elemloc);
+%elemloc = graphIntegrity(elemloc);
 
 %elemloc(683) = 16;
 %% multiscale properties
@@ -130,6 +154,11 @@ elemloc = graphIntegrity(elemloc);
     if strcmp(multiscale, 'off')
         semiEdges = [];
     end
+    
+    
+
+
+    
 %% ================ Multiscale Preprocessador for MsRSB ===================
 if ~isempty(semiEdges)
 % bold = 1;    

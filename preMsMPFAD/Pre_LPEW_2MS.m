@@ -11,13 +11,16 @@ global coord bcflag bedge inedge npar pointWeight Nregion w s esurn2 ...
 %BOUNDARY
 %mobility(:,:) = 1;
 for region = 1: npar
-
+   
+    
+    
 listPoint = pointWeight{region};
 apw=ones(size(coord,1),1);
 r=zeros(size(coord,1),2);
     
     for tt=1:size(listPoint,1)
         No = listPoint(tt);
+
         if flagboundcoarse(No)==1
             % calcula
             % O--> coordenadas do baricentro na vizinhança do nó "No"

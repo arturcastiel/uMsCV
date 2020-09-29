@@ -60,6 +60,14 @@ po = TransF\F;
 
 [OP,CT] = genProlongationOperatorAMS(TransF, F);
 
+
+
+%OP = bsxfun(@rdivide, OP(reff,:) ,sum( OP(reff,:) ,2));        
+
+
+
+
+
 toc;
 
 %
@@ -139,15 +147,20 @@ end
 %% Suavizador
 disp('Iterativo')
 tic 
-pn = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
-pd = pn;
-postprocessorTMS(full((pd)), full((pd)),0,superFolder,'multiscala01')
+pv = pd;
+
+pd = iterativeMs(TransF, F, ac,bc, OP, OR, pd);
+
+postprocessorTMS(full((pd)), full((pv)),0,superFolder,'pd - pv')
 %pd = po
 toc
+postprocessorTMS(full((po)), full((po)),0,superFolder,'original')
 
-
-postprocessorTMS(full((OP*pc)), full((CT)),0,superFolder,'multiscala02')
+postprocessorTMS(full((OP*pc)), full((CT)),0,superFolder,'OPpc - CT')
 %pd = OP*pc;
+
+disp([normError(pd, po ,2) , normError(pd, po ,inf)])
+disp([normError(pv, po ,2) , normError(pv, po ,inf)])
 
 %C = CT\F;
 tempo = 0;
@@ -209,14 +222,14 @@ pressure = pd;
 % ooo = find(abs(flowresultPn) > 0.0000001);
 flowresult = fluxSummation(flowPms);
 consTestMpfa
-postprocessorTMS(full(pd),full(pp),0,superFolder,'Neummna');
-if bold == 1
-    postprocessorTMS(full(pd),full(po),0,superFolder,'Primeiro');
-elseif bold == 2
-    postprocessorTMS(full(pd),full(po),0,superFolder,'Segundo');
-end
+% postprocessorTMS(full(pd),full(pp),0,superFolder,'Neummna');
+% if bold == 1
+%     postprocessorTMS(full(pd),full(po),0,superFolder,'Primeiro');
+% elseif bold == 2
+%     postprocessorTMS(full(pd),full(po),0,superFolder,'Segundo');
+%end
 disp([normError(pd, po ,2) , normError(pd, po ,inf)])
-disp([normError(pp, po ,2) , normError(pp, po ,inf)])
+disp([normError(pv, po ,2) , normError(pv, po ,inf)])
 ll = [npar pt nc bold kmap(end,end) normError(pd, po ,2) normError(pd, po ,inf)];
 dlmwrite('simuSingle.txt', full(ll),'-append')
 

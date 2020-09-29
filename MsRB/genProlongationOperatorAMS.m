@@ -6,7 +6,9 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
 %   maxint = max number of iteration
     type_flag = 1;
 
-    global npar    edges_ordering perm_matrix id_classify local_edges; 
+    global npar    edges_ordering perm_matrix id_classify local_edges  I internal_split; 
+    qq = perm_matrix*I;
+    
     pTransF = perm_matrix*TransF*perm_matrix';
     pF = perm_matrix*F;
     type_vec = perm_matrix*id_classify;
@@ -64,27 +66,39 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
     elseif type_flag == 1
         Mtp = solveMeeAen(Mee,Aen);
         Btp = -Mtp;
-        %Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2));        
+        Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2)); 
+        %Btp = normNegativo(Btp, local_edges);
+        %Btp = normB(Btp, local_edges);
+        %Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2)); 
+        %ref = true(size(Btp,1), 1);
+        %Btp(ref,:) = bsxfun(@rdivide, Btp(ref,:) ,sum( Btp(ref,:) ,2));     
     elseif type_flag == 2
         [iMee] = finvMee(Mee);
         %[Aen] = fAee(Aen);
         Btp = -iMee*Aen;
+        ref = true(size(Btp,1), 1);
+        %Btp(ref,:) = bsxfun(@rdivide, Btp(ref,:) ,sum( Btp(ref,:) ,2));     
         Btp = bsxfun(@rdivide, Btp(:,:) ,sum( Btp(:,:) ,2));  
     end
  
     %Mee = mMee;
     
-    B = [Ass\(Ase*(-Btp) - Asn) ; Btp; eye(npar,npar)];
+    
+    T = (Ase*(-Btp) - Asn);
+    %[T] = fixT(T);
+    
+    B = [Ass\T ; Btp; eye(npar,npar)];
+    %B = [Ass\(Ase*(-Btp) - Asn) ; Btp; eye(npar,npar)];
 
+    
    % B = [Ass\(Ase*Mtp - Asn) ; Btp; eye(npar,npar)];
    %B = bsxfun(@rdivide, B(:,:) ,sum( B(:,:) ,2));        
 
    OP = perm_matrix'*B;
-    
+   PQ = perm_matrix'*qq; 
     
     
     %CT = [Ass\Qs - Ass\(Ase* (Mee\Qe)); Mee\Qe; sparse(npar,1) ];
-
     if type_flag == 0
         CT = [Ass\Qs - Ass\(Ase* (Mee\Qe)); Mee\Qe; sparse(npar,1) ];
     else
@@ -103,6 +117,18 @@ function [ OP, CT] = genProlongationOperatorAMS(TransF, F)
 end
 
 % 
+function [Tm] = fixT(T)
+    global internal_split
+    inf_outsupport = sum((~internal_split) .* T,2);
+    inf_insupport = internal_split .*T;
+    sum_support = sum(inf_insupport,2);
+    
+    ref = sum_support ~= 0;
+    inf_insupport(ref,:) = bsxfun(@rdivide, inf_insupport(ref,:), sum_support(ref));     
+    
+    Tm = inf_insupport;
+end
+
 function [Mtp] = fAee(Aen)
   global npar local_edges perm_matrix elem inedge bedge edges coord
     %edge_size = size(Mee,1);
@@ -126,7 +152,8 @@ function [Mtp] = finvMee(Mee)
     Mtp = zeros( edge_size, edge_size);
     auxB = false(edge_size,1);
     for ii = 1:edge_size
-        ref = (edges_inv(:,ii) == 1) == true;
+        ref = (edges_inv(:,ii) == 1)   == true;
+      
         auxA = Mee(ref,ref);
         auxC = auxB;
         auxC(ii) = true;
@@ -168,7 +195,7 @@ end
 % end
 
 
-function [Mtp] = solveMeeAen(Mee,Aen)
+function [Mtp] = solveMeeAen1(Mee,Aen)
     global npar local_edges perm_matrix elem inedge bedge edges coord
     edge_size = size(Mee,1);
     Mtp = zeros( edge_size, npar);    
@@ -187,6 +214,60 @@ function [Mtp] = solveMeeAen(Mee,Aen)
 end
 
 
+function [Mtp] = solveMeeAen(Mee,Aen)
+    global npar local_edges perm_matrix elem inedge bedge edges coord
+    edge_size = size(Mee,1);
+    Mtp = zeros( edge_size, npar);    
+    parfor ii = 1:npar
+        auxA = Mee;
+        auxB = Aen(:,ii);
+        auxvec = zeros(size(auxB));
+        ref = (local_edges(:,ii) == 0) == true;
+        
+        ref2 = (local_edges(:,ii) ~= 1) == true;        
+        %linha de producao
+        %ref = ref2;
+        for jj = find(ref)'
+            auxA(:,jj) = 0;
+            auxA(jj,jj) = 1;
+            auxB(jj) = 0;
+        end
+        
+%         aa = auxA(ref,ref);
+%         bb = auxB(ref);
+%         
+%         auxvec(ref) = aa\bb;
+        auxvec = auxA\auxB;
+        %auxvec = -normalizeNegative(-auxvec);
+        auxvec(ref2) = 0;
+        %auxvec(~ref2) = -normalizeNegative(-auxvec(~ref2));
+        %auxvec(~ref2) = -normalizeNegative(-auxvec(~ref2))
+        %Mtp(:,ii) = normalizeNegative(auxvec);
+        Mtp(:,ii) = auxvec;      
+    end
+
+end
+
+function [Mtp] = solveMeeAen2(Mee,Aen)
+    global npar local_edges perm_matrix elem inedge bedge edges coord
+    edge_size = size(Mee,1);
+    Mtp = zeros( edge_size, npar);    
+    parfor ii = 1:npar
+        auxA = Mee;
+        auxB = Aen(:,ii);
+        ref = (local_edges(:,ii) == 0) == true;
+        1
+        for jj = find(ref)'
+            auxA(:,jj) = 0;
+            auxA(jj,jj) = 1;
+            auxB(jj) = 0;
+        end
+        
+        
+        Mtp(:,ii) = auxA\auxB;      
+    end
+
+end
 
 % function [Mtp] = solveMeeAen(Mee,Aen)
 %     global npar local_edges perm_matrix elem inedge bedge edges coord
@@ -206,6 +287,51 @@ end
 % 
 % end
 
+function [C] = normNegativo(B, local_edges)
+    ref = true(size(B,1), 1);
+        %Btp(ref,:) = bsxfun(@rdivide, Btp(ref,:) ,sum( Btp(ref,:) ,2));     
+    C = B;
+    top = max(B, [], 2);
+    bot = min(B, [], 2);
+    dtp = top - bot;  
+    %ref = (local_edges == 0) == true;
+    C = bsxfun(@minus,C, bot);
+   
+    C((local_edges == 0) == true) = 0;
+
+    C = bsxfun(@rdivide, C, dtp);
+    dtp = sum(C,2);  
+    %C((local_edges == 2) == true) = 0;
+    
+    C = bsxfun(@rdivide, C, dtp);
+    %C((local_edges == 2) == true) = 0;
+
+    B = C;
+    %C  = F;
+    %C = bsxfun(@minus, C(ref,:) ,bot); 
+    %C = bsxfun(@rdivide, C(ref,:) , dtp); 
+   1 
+end
+
+
+function [bnorm] = normB(B, local_edges)
+global npar
+bnorm = zeros(size(B));
+for ii = 1:npar
+    reff2 = abs(B(:,ii)) > 10^-8;
+    reff1 = local_edges(:,ii) == 1;
+    reff = reff1 & reff2;
+    bnorm(reff,ii) = normalizeNegative(B(reff,ii));
+end
+1
+end
+
+function [dnorm] = normalizeNegative(auxvec)
+     dmin = min(auxvec);
+     dt = max(auxvec) - min(auxvec);
+     dnorm = (auxvec - dmin)/dt;
+       
+end
 
 
 

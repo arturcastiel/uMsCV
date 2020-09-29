@@ -2,10 +2,10 @@
 % Implicit Pressure , Explicit Saturation
 %vpi_vec = [ 0.1 0.4 0.5 0.9 1];
 global elem coord inedge pormap elemarea bedge centelem smetodo CFL ordem Globals2D_CPR perm_matrix per_vec id_classify local_edges; 
-global edges edges_inv
+global edges edges_inv internal_split
 %% pre ams
 [perm_matrix, nodes, edges, id_classify, per_vec] = genPermMatrix();
-[local_edges, edges_inv] = split_edge(edges,perm_matrix);
+[local_edges, edges_inv, internal_split] = split_edge(edges,perm_matrix);
     
 %% Saturation Preprocessor 
 nflagno= contflagnoN(bedge);
