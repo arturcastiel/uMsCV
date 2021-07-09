@@ -83,7 +83,7 @@ count = 0;  iplotfc=0; tic; z = 1;
     mobility(:) = 1;
        [p,errorelativo,flowrate,flowresult,OP_old,b2,b3,tempo,v]=solverpressureMsMPFAD_Smoother(kmap,fonte,...
            mobility,wells,S_old,V,nw,no,N,auxflag,Hesq, Kde, Kn, Kt, Ded,nflagno,OP_old,S_cont);
-
+1
 
  %      pref = load('REF_P');
 % %        Linf(z,1) = max(abs(pref.REF_P-p))/max(abs(pref.REF_P)); L1(z,1) = sum(abs(pref.REF_P-p))/sum(abs(pref.REF_P)); L2(z,1) = sqrt(sum((pref.REF_P-p).^2))/sqrt(sum((pref.REF_P).^2));

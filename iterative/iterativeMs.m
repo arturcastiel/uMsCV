@@ -4,7 +4,10 @@ function [p_last] = iterativeMs(TransF, F, ac,bc, OP, OR, po)
 global superFolder
 index = 1;
 maxoutit = 7;
-maxinit = 200;
+maxinit = 500;
+maxoutit = 10;
+maxinit = 2000;
+
 tol = 1e-3;
 
 tol = 1e-3;
@@ -16,19 +19,45 @@ tol =  1e-2;
 in_tol =  2 * 1e-3;
 
 
+%%
+tol =  1e-1;
+in_tol =   1e-4;
+%%
+tol =  1e-1;
+in_tol =  1 * 1e-2;
+
+ tol =  1e-2;
+ in_tol =   1e-4;
+
 %in_tol = 0.3*1e-2;
 %in_tol = 0.3*1e-4;
 %symrcm(TransF)
 
+%ameba
+ tol =  1e-3;
+ in_tol =   1e-6;
+ 
+ % SPE
+  tol =  1e-2;
+ in_tol =   1e-4;
 
-
+ 
+  % SPE
+  tol =  1e-3;
+ in_tol =   1e-6;
+ 
+ 
+ 
+% in_tol =   1e-3;
+%  tol =  1e-2;
+%  in_tol =   1e-4;
 p_old = po;
 
 %ac1 = OP'*TransF*OP;
 %ac1i = ac1^-1;
 aci = ac^-1;
 
-[L,U] = ilu(TransF,struct('type','nofill','droptol',1e-4));
+[L,U] = ilu(TransF,struct('type','nofill','droptol',1e-5));
 %[L,U] = ilu(TransF);
 %OR = OP';
 
@@ -75,8 +104,12 @@ end
 %
 r_old = F - (TransF*p_old);
 %dp1 = OP* ac * OP'*r_old;
-dp1 = OP * (aci)* OR*r_old;
+%dp1 = OP * (aci)* OR*r_old;
+dp1 = OP * (aci)* (OP')*r_old;
+
 p_old = p_old + dp1;
+
+
 %     
 % 
 % 

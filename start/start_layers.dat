@@ -283,15 +283,15 @@ y
 
 //If [y], write below the path where the mesh file is:
  
-C:\MsCV\mscvnla\grids
+C:\Users\artur\project\uMsCV\grids
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-5spotLayer.msh
+5spotLayerN.msh
 
 //If [n], write below the path where the geometry file is:  
 
-C:\MsCV\mscvnla\grids
+C:\Users\artur\project\uMsCV\grids
 
 //Write below the name of the geometry file. Use the extension *.geo.
 
@@ -516,17 +516,17 @@ n
 //used to "draw" the surfaces during CAD building. (*.geo).  
 
 1
-1 0
-0 1
+505 495
+495 505
 2
-3 0
-0 3
+1000 0
+0 10
 3
-2 0
-0 2
+10 0
+0 1000
 4
-1 0
-0 1
+505 495
+495 505
 
 //--------------------------------------------------------------------
 //Distribution of porosity:
@@ -623,7 +623,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.5
+30
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
@@ -642,7 +642,7 @@ pvi
 //state simulation (parameter of stop). Write below the amount of 
 //days or the PVI's value instead:
 
-1.25 
+0.45 
 
 //--------------------------------------------------------------------
 //------------------------------- Wells ------------------------------

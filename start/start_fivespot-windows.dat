@@ -287,7 +287,7 @@ C:\Users\artur\project\uMsCV\grids
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-ssmall.msh
+unsmall.msh
 
 //If [n], write below the path where the geometry file is:  
 
@@ -521,12 +521,7 @@ n
 2
 0.001 0
 0 0.001
-3
-1 0
-0 1
-4
-1 0 
-0 1
+
 //--------------------------------------------------------------------
 //Distribution of porosity:
 
@@ -622,7 +617,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.40
+0.6
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
@@ -641,7 +636,7 @@ pvi
 //state simulation (parameter of stop). Write below the amount of 
 //days or the PVI's value instead:
 
-1
+0.4
 
 //--------------------------------------------------------------------
 //------------------------------- Wells ------------------------------

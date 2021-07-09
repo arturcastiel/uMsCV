@@ -1,3 +1,5 @@
+clear all
+clc
 %FV-MsRB - MultiScale Restriction smoothed Basis method
 %Two Phase Flow
 %2d -Impl�cita na Press�o Expl�cita na Satura��o (IMPES)
@@ -14,16 +16,39 @@ global tol_c coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
     coarseningRatio wells mshfile edgesOnCoarseBoundary refCenterInCoaseElem ...
     dictionary edgesCoarseDict coarseDiricht intinterface pointloc regularEdges semiEdges ...
     coarseedge ordem splitFag bold mesh nx ny coarsemesh edges_ordering dualRegion perm_matrix internal_split
+global osMode dualAround  kwmax komax nw no
 
-global osMode dualAround
+
+kwmax = 2;
+komax = 2;
+
+kwmax = 1;
+komax = 1;
+
+
+%% exponente das permeabilidades relativas cuidado...! 
+nw=2;
+no=2;
+
+nw=2;
+no=2;
+
 osMode = 'windows';
 nameFile = 'start_fivespot.dat';
-nameFile = 'start_cross.dat';
+nameFile = 'start_double.dat';
+nameFile = 'start_marcio.dat';
+nameFile = 'start_spe.dat';
+nameFile = 'start_layers.dat';
+%nameFile = 'start_marciofuro.dat';
+%nameFile = 'start_cross.dat';
 %nameFile = 'start_furo.dat';
 %nameFile = 'start_brazil.dat';
 
 %nameFile = 'start_darlan.dat';
 %nameFile = 'start_amoeba.dat';
+
+%nameFile = 'start_amoebaw.dat';
+%nameFile = 'start_eye.dat';
 %nameFile = 'start_kanji.dat';
 
 %nameFile = 'cond1.dat';
@@ -40,21 +65,40 @@ smetodo = 'FOU'
 mesh = 3;
 nx = 6;
 ny = 6;
-coarsemesh = 'coarse3x3.msh';
 coarsemesh = 'coarse4x4.msh';
-%coarsemesh = 'coarse5x5.msh';
+%coarsemesh = 'coarse3x3.msh';
 
-%coarsemesh = 'coarse4.msh';
+%coarsemesh = '5spotLayerCOARSE.msh'
+
+%coarsemesh = 'coarse6x6.msh';
+coarsemesh = 'coarse5x5.msh';
+
+%%coarsemesh = 'coarse4.msh';
+%coarsemesh = 'coarse10.msh';
+
+%%marcio coarse 03 6 8 13 eh bom
+%coarsemesh = 'marciocoarse15.msh';
+%coarsemesh = 'marciocoarse06.msh';
+
+%coarsemesh = 'cspeDD.msh';
+
+%coarsemesh = 'furomarciocoarse05.msh';
+%coarsemesh = 'coarse3x3.msh';
+
 %coarsemesh = 'coarse.msh';
 
 %coarsemesh = 'coarsedarlan.msh';
-%coarsemesh = 'coarsedarlantop2.msh';
+%%coarsemesh = 'coarsedarlantop2.msh';
 %coarsemesh = 'coarsedarlantop4.msh';
 
 
 %coarsemesh = 'coarsedarlan3.msh';
 %coarsemesh = 'coarseartur.geo.msh';
-%coarsemesh = 'camoeba3.msh';
+%coarsemesh = 'camoeba.msh';
+%coarsemesh = 'camoeba.msh';
+%coarsemesh = 'camoeba2.msh';
+%coarsemesh = 'camoeba8.msh';
+%coarsemesh = 'eyecoarse1.msh';
 %coarsemesh = 'kanjic2.msh';
 %coarsemesh = 'crossc1.msh';
 
@@ -64,6 +108,9 @@ coarsemesh = 'coarse4x4.msh';
 
 %coarsemesh = 'furoC.msh';
 %coarsemesh = 'brazilC2.msh';
+%malha 7 eh boa
+%coarsemesh = 'doublecoarse07.msh';
+
 
 %Globals2D_CPR;
 
@@ -134,14 +181,13 @@ path(path,'iterative');
 %% ===================== Preprocessador Multiescala =======================
 %debugTest3;
 %debugPoint;
-%adeqPerm;
 multiCC = 1;
 
 splitFlag = 1;
 %[centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem,] = reordering(centelem, elem, elemarea, esurn1, esurn2, inedge, bedge, elemloc,  coarseelem, npar,coord);
 
 [primal_forming, primal,elemloc1,elemloc2] = primalDefine(pMethod);
-%elemloc = graphIntegrity(elemloc);
+elemloc = graphIntegrity(elemloc);
 %elemloc = graphIntegrity(elemloc);
 %elemloc = graphIntegrity(elemloc);
 
@@ -205,6 +251,7 @@ end
 itOn = 0;
 superFolderMK
 % malha 32x32
+
 
 %% distorcao de malhas estruturadas
 %[auxcoord]=distortedramd;
@@ -340,6 +387,10 @@ benchmark='gaowu9';
 %% Multiscale Solver
 
 meshAnalysis
+
+pormap = pormap * ones(size(elemloc));
+%adeqPerm;
+
 %permChannel
 %changepermeability 
 %datageneration

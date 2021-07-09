@@ -113,7 +113,7 @@ Plane Surface(1) = {1};
 //Circle{4} In Surface {1};
 //Circle{5} In Surface {1};
 
-Recombine Surface{1};
+//Recombine Surface{1};
 //Recombine Surface{2};
 //Recombine Surface{3};
 //Recombine Surface{4};

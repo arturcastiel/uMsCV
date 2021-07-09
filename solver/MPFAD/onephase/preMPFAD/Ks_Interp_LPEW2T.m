@@ -1,6 +1,7 @@
 function [ Kt1, Kt2, Kn1, Kn2 ] = Ks_Interp_LPEW2T( O, T, Qo, kmap, ni, mobility,S_old,V,nw,no)
 
-global esurn2 esurn1 elem satlimit visc
+global esurn2 esurn1 elem satlimit visc kwmax  komax
+
 %Retorna os K(n ou t) necessários para a obtenção dos weights. kmap é a
 %matriz de permeabilidade; Ex: Kt1->linhaN=Kt1(cellN);
 
@@ -43,10 +44,10 @@ j=esurn1(esurn2(ni)+k);
     end
         
     %------------------- Calculo da mobilidade total  no elemento---------%    
-    Krw1 = ((S_old(j) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
-    
+    Krw1 = ((S_old(j) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;   
     Kro1 = ((1 - S_old(j) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
-    
+    Krw1 = Krw1 * kwmax;
+    Kro1 = Kro1 * komax;    
     L22 = Krw1/visc(1) +  Kro1/visc(2);
     
     %------------------------- Tensores ----------------------------------%

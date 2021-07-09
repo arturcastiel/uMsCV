@@ -1,13 +1,31 @@
 % [flowMs, flowresultMs,velocityMs] = flowrateMPFAD(p,w,s,Kde,Ded,Kn,Kt,Hesq,nflagno,auxflag);
 % flowMs = flowMs(size(bedge,1)+1:end);
 global npar
+
+
 coarseConsv1 = zeros(npar,1);
 coarseConsv2 = zeros(npar,1);
 global intinterface inedge elemloc
 
 %flowMs = flowPms;
 %flowMs = flowPd;
-flowMs = flowrate;
+% flowrate = flowPd';
+% flowMs = flowrate;
+%flowMs = flowrate';
+
+ flowMs = zeros(size(flowrate));
+ flowMs = flowMs';
+ xx = size(bedge,1);
+ yy = size(inedge,1);
+ flowMs(1:xx) = flowrate(yy+1:end);
+ flowMs(xx:end) = flowrate(xx);
+
+% flowMs = zeros(size(flowrate));
+% xx = size(bedge,1);
+% yy = size(inedge,1);
+% flowMs(1:xx) = flowrate(yy+1:end);
+% flowMs(xx:end) = flowrate(xx);
+
 
 %flowMs = flowrate((size(bedge,1) +1):end) ;
 %flowMs = flowrate;

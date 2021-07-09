@@ -5,7 +5,8 @@
 function [mobility] = mobilityfaceRegion(S_old,nw,no,auxflag,S_cont,mob)
 
 simu = '312';
-global visc satlimit elem inedge esurn1 esurn2 bedge elemarea elemloc bedgeNode oneNodeEdges npar
+global visc satlimit elem inedge esurn1 esurn2 bedge elemarea elemloc bedgeNode oneNodeEdges npar kwmax komax
+
 if strcmp(simu,'monofasico')
     mobility=ones(size(inedge,1)+size(bedge,1),1);
 else
@@ -29,6 +30,9 @@ else
                     Krw1 = ((S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
                     
                     Kro1 = ((1 - S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
+                    Krw1 = Krw1 * kwmax;
+                    Kro1 = Kro1 * komax;
+                    
                     
                     L11 = Krw1/visc(1) +  Kro1/visc(2); % mobilidade total no elemento esquerdo
                     
@@ -50,6 +54,8 @@ else
                     Krw1 = ((S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
                     
                     Kro1 = ((1 - S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
+                    Krw1 = Krw1 * kwmax;
+                    Kro1 = Kro1 * komax;                    
                     
                     L22 = Krw1/visc(1) +  Kro1/visc(2); % mobilidade total no elemento esquerdo
                     
@@ -91,6 +97,8 @@ else
                             
                             Kro1 = ((1 - S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
                             
+                            Krw1 = Krw1 * kwmax;
+                            Kro1 = Kro1 * komax;                                
                             L11 = Krw1/visc(1) +  Kro1/visc(2); % mobilidade total no elemento esquerdo
                             
                             A(tt)=elemarea(tt);
@@ -111,7 +119,8 @@ else
                             Krw1 = ((S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
                             
                             Kro1 = ((1 - S_old(tt) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
-                            
+                            Krw1 = Krw1 * kwmax;
+                            Kro1 = Kro1 * komax;
                             L22 = Krw1/visc(1) +  Kro1/visc(2); % mobilidade total no elemento esquerdo
                             
                             A1(tt)=elemarea(tt);
@@ -131,6 +140,9 @@ else
                     Krw1 = ((S_cont - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
                     
                     Kro1 = ((1 - S_cont - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
+                    
+                    Krw1 = Krw1 * kwmax;
+                    Kro1 = Kro1 * komax;
                     mobility(i+size(inedge,1),region) = Krw1/visc(1) +  Kro1/visc(2); % mobilidade total no elemento esquerdo
                 end
             end

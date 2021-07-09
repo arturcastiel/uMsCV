@@ -1,6 +1,6 @@
 function [dfdS] = calcdfdS1(Sw,nw,no)
 %Define global parameters
-global satlimit visc
+global satlimit visc kwmax komax
 
 %Define "dfdS" and "dgamadS" according to "dertype"
 %Initialize some propoerties (two-phase flow)
@@ -12,8 +12,8 @@ mio = visc(2);
 dfdS = zeros(length(Sw),1);
 
 %Fit parameter (water and oil)
-kwmax = 1;
-komax = 1;
+%kwmax = 1;
+%komax = 1;
 
 %Calculate the derivate
 for i = 1:length(Sw)

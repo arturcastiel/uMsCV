@@ -1,6 +1,7 @@
 te-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.exe
 *$py.class
 
 # C extensions

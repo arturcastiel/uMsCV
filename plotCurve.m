@@ -1,4 +1,4 @@
-superFolder = strcat(pwd,'/Results/');
+superFolder = strcat(pwd,'\Results\');
 FOLD = dir(superFolder);
 LEN = size(FOLD,1);
 %     fprintf(fid3,'%13.3e %13.3e %13.3e %13.3e \n',VPI(cont), ...
@@ -13,8 +13,8 @@ for ii = 3:LEN
 end
 flag = input('Enter the Case Number: ') + 2;
 typeCase = FOLD(flag).name;
-pointMs = strcat(superFolder,typeCase, '/CurveMs.dat');
-pointOr = strcat(superFolder,typeCase, '/CurveOriginal.dat');
+pointMs = strcat(superFolder,typeCase, '\CurveMs.dat');
+pointOr = strcat(superFolder,typeCase, '\CurveOriginal.dat');
 matMs = load(pointMs);
 matOr = load(pointOr);
 
@@ -28,7 +28,7 @@ whitebg('white')
 
 subplot(3,1,1)
 
-plot(matMs(:,1),matMs(:,2),'.-','DisplayName','MsCV','color',[0 0.2969 0.5977],'LineWidth',2.5)
+plot(matMs(:,1),matMs(:,2),'.-','DisplayName','AMS-U','color',[0 0.2969 0.5977],'LineWidth',2.5)
 hold on
 plot(matOr(:,1),matOr(:,2),'--','DisplayName','Reference Solution','color',[0.782 0 0.3],'LineWidth',2.5)
 legend('show')
@@ -41,7 +41,7 @@ grid on
 subplot(3,1,2)
 %plot(matMs(:,1),matMs(:,3))
 
-plot(matMs(:,1),matMs(:,3),'.-','DisplayName','MsCV','color',[0 0.2969 0.5977],'LineWidth',2.5)
+plot(matMs(:,1),matMs(:,3),'.-','DisplayName','AMS-U','color',[0 0.2969 0.5977],'LineWidth',2.5)
 hold on
 plot(matOr(:,1),matOr(:,3),'--','DisplayName','Reference Solution','color',[0.782 0 0.3],'LineWidth',2.5)
 grid on
@@ -51,7 +51,7 @@ xlabel('PVI - Porous Volume Injected','FontSize',10,'FontWeight','normal','Color
 xlim([0 min([max(matMs(:,1)); max(matOr(:,1)) ]) ])
 subplot(3,1,3)
 %plot(matMs(:,1),matMs(:,4))
-plot(matMs(:,1),matMs(:,4),'.-','DisplayName','MsCV','color',[0 0.2969 0.5977],'LineWidth',2.5)
+plot(matMs(:,1),matMs(:,4),'.-','DisplayName','AMS-U','color',[0 0.2969 0.5977],'LineWidth',2.5)
 hold on
 plot(matOr(:,1),matOr(:,4),'--','DisplayName','Reference Solution','color',[0.782 0 0.3],'LineWidth',2.5)
 grid on

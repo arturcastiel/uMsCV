@@ -539,7 +539,7 @@ y
 //(each one must be associated to its layer).
 
 1
-1    
+0.2    
 
 //If [n], each control volume will have a different value of porosity 
 //Get it from an external file. Write below both the path and name of 
@@ -617,7 +617,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.90
+50
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
@@ -636,7 +636,7 @@ pvi
 //state simulation (parameter of stop). Write below the amount of 
 //days or the PVI's value instead:
 
-1
+0.6
 
 //--------------------------------------------------------------------
 //------------------------------- Wells ------------------------------

@@ -227,7 +227,7 @@ if meshtype == true
     end
     clear auxmat
     %% splitting edges on the boarder 
-    
+    splitFlag = 0;
     if splitFlag == 1
         for ii=1:npar
             t = size(exinterface{ii});

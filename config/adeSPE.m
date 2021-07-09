@@ -5,9 +5,12 @@
 %        13200           4           0           0         503           1;
 %          220           5           0           0         504           1];
 %      
-layer = 85;
+layer = 34;
  %sizeX = 1;
  %sizeY = 1;
+ sizeX = 2200/1200;
+ sizeY = 1;
+ 
  %sizeX = 2200;
  %sizeY = 1200;
 meshX = 220;
@@ -16,7 +19,7 @@ Rotacionado = 0;
 triangular = 0;
 %%stretching
 tflag = max(coord);
-if (tflag(1) < sizeX) & (tflag(2) < sizeY)
+if (tflag(1) <= sizeX) & (tflag(2) <= sizeY)
     coord(:,1) = coord(:,1) * sizeX ;
     coord(:,2) = coord(:,2) * sizeY ;
     centelem(:,1) = centelem(:,1) * sizeX ;

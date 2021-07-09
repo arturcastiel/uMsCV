@@ -13,14 +13,15 @@ Line(3) = {3, 4};
 
 Line(4) = {4, 1};
 
-Transfinite Line {1,3} = 221Using Progression 1;
-Transfinite Line {2,4} = 61Using Progression 1;
+Transfinite Line {1,3} = 15Using Progression 1;
+Transfinite Line {2,4} = 16Using Progression 1;
 
 
 
 Line Loop(1) = {1, 2, 3, 4};
 Plane Surface(1) = {1};
 Transfinite Surface {1} = {1,2,3,4};
+Recombine Surface {1};
 
 Physical Point(201) = {1, 2, 3, 4};
 Physical Line(201) = {1, 2, 3, 4};

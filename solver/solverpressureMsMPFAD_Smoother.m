@@ -86,7 +86,7 @@ toc
 %     Trans(ii, ii) = 1; 
 %     F(ii) = 1;    
 % end
-po = TransF\F;
+%po = TransF\F;
 
 %postprocessorOP(OP,0,superFolder,'Operadores');
 OP_old = OP;
@@ -207,7 +207,7 @@ pp =  neumanmMPFAD(TransFn,Fn, coarseelem , edgesOnCoarseBoundary, flowPd,pd );
 %superFolder = 'C:\Users\admin\Google Drive\Programa��o\FV-MsRB\';
 %postprocessorName(full(pd),full(pp),superFolder, 'PP-Teste');
 
-flowPms = compoundFlow( flowPp,flowPd2, size(bedge,1) );
+    flowPms = compoundFlow( flowPp,flowPd2, size(bedge,1) );
 %flowPms(abs(flowPms) < 0.00000001) = 0;
 %postMPFA
 

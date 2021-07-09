@@ -1,6 +1,6 @@
 function [ Kt1, Kt2, Kn1, Kn2 ] = Ks_Interp_LPEW2MS( O, T, Qo, kmap, ni,region,mobility,S_old,nw,no)
 
-global esurn2 esurn1 elem Vregion satlimit visc
+global esurn2 esurn1 elem Vregion satlimit visc  kwmax komax
 %Retorna os K(n ou t) necessários para a obtenção dos weights. kmap é a
 %matriz de permeabilidade; Ex: Kt1->linhaN=Kt1(cellN);
 eOrd = esurnOrd(ni,region);
@@ -57,6 +57,9 @@ j =  eOrd(k);
     Krw1 = ((S_old(j) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^nw;
     
     Kro1 = ((1 - S_old(j) - satlimit(1))/(1 - satlimit(1) - satlimit(2)))^no;
+    
+    Krw1 = Krw1 * kwmax;
+    Kro1 = Kro1 * komax;
     
     L22 = Krw1/visc(1) +  Kro1/visc(2);
     %------------------------- Tensores ----------------------------------%

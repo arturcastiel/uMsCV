@@ -287,7 +287,7 @@ y
 
 //Write below the name of the mesh file. Use the extension *.msh:
 
-speH.msh
+speDD.msh
 
 //If [n], write below the path where the geometry file is:  
 
@@ -614,7 +614,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.6
+10
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
@@ -633,7 +633,7 @@ pvi
 //state simulation (parameter of stop). Write below the amount of 
 //days or the PVI's value instead:
 
-1.25 
+0.4 
 
 //--------------------------------------------------------------------
 //------------------------------- Wells ------------------------------
@@ -677,7 +677,7 @@ pvi
 
 2
 1 0 0 0.05 301 1 0 1 1
-1 1 1 0.05 0 0 501 1 0
+1 1.8333 1 0.05 0 0 501 0 0
 
 //
 2

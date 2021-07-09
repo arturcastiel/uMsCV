@@ -5,7 +5,7 @@
 % 1 - Monofasico do Mestrado do Fernando - Ativar o termo Fonte no Assembly
 % 2 - Bifasico Altamente Heterogeneo e Isotropico
 % 3 - Bifasico Aleatorio Chueh
-permFlag  = 1
+permFlag  = 4
 
 if permFlag == 1
     %global fontEach
@@ -59,6 +59,33 @@ elseif permFlag == 3
     elem(:,end) = [1:size(elem,1)]';
     postprocessorName(kmap(:,2),0,superFolder, 'PermeHet')
 
+elseif permFlag == 4
+    alet = load('chuehartur.mat', 'perm_points')
+    %alet = struct2cell(alet.chue);
+    alet = alet.perm_points;
+    normP = @(x,y)(x.^2 + y.^2).^.5;
+   % phiIso = @(x,y,numb) exp(-  ((1/0.05).*( normP((x - alet(numb,2)),((y - alet(numb,3))) ) ) ).^2 );
+   
+    
+    phiIso = @(x,y,numb) exp(1).^(- ((normP((x - alet(numb,2)),((y - alet(numb,3)))) ./0.05).^2)  );
+
+    
+    acum = zeros(size(elem,1),1);
+    for ii = 1:40
+       acum = acum +  phiIso(centelem(:,1),centelem(:,2), ii*ones(size(elem,1),1));       
+    end
+    flagT = (acum <= 0.01);
+    acum(flagT) = 0.01;
+    
+    flagT = (acum > 4);
+    acum(flagT) = 4;
+    weights = acum;
+    %weights = 4*ones(size(elem,1),1) - weights;
+    
+    kmap = [ [1:size(elem,1)]'  weights zeros(size(elem,1),1) zeros(size(elem,1),1) weights];
+    pormap = pormap .* ones(size(elem,1),1);
+    elem(:,end) = [1:size(elem,1)]';
+    postprocessorName(kmap(:,2),0,superFolder, 'PermeHet')
     
 end
 

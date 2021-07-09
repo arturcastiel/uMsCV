@@ -260,6 +260,12 @@ end
 GlobalBoundary = false(size(elem,1),1);
 ref = unique(horzcat(boundRegion{:}));
 GlobalBoundary(ref) = true;
+
+%% dual integrity fix
+
+% dualIntegrity(GlobalBoundary,coarseElemCenter, boundRegion,  coarse_strips, bcoarse_strips);
+[GlobalBoundary,boundRegion,  coarse_strips, bcoarse_strips] = dualIntegrity(GlobalBoundary,coarseElemCenter, boundRegion,  coarse_strips, bcoarse_strips);
+
 %  
 %  
  %% Creating interaction Region

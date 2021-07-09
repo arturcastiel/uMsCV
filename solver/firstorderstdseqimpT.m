@@ -1,28 +1,29 @@
 function [S_old] = firstorderstdseqimpT(S_old,influx,bflux,dt,wells,...
-                q,nw,no,elem,bedge,inedge,elemarea,pormap)
-          
+                          q,nw,no,elem,bedge,inedge,elemarea,pormap)
+         
 C = sparse(size(elem,1),size(elem,1));
+region = elem(:,end);
 
-pormap = ones(size(elem,1),1);
 t1=1;t2=1;
-for i=1:size(wells,1)
-   if wells(i,2)==1
-       injecelem(1,t1)=wells(i,1);
-       t1=t1+1;
-   elseif wells(i,2)==2
-       producelem(1,t2)=wells(i,1);
-       t2=t2+1;
-   end
+if isempty(wells)==0
+    for i=1:size(wells,1)
+       if wells(i,3)>300 && wells(i,3)<400
+           injecelem(1,t1)=wells(i,1);
+           t1=t1+1;
+       elseif wells(i,3)==0
+           producelem(1,t2)=wells(i,1);
+           t2=t2+1;
+       end
+    end
+else
+    injecelem = []; producelem = [];
 end
 
 %--------------------------------------------------------------------------
 %Boundary edges
 for i = 1:size(bedge,1)
-   if i == 5
-       1+1
-   end
     C(bedge(i,3),bedge(i,3)) =  C(bedge(i,3),bedge(i,3)) + ...
-        bflux(i)/(elemarea(bedge(i,3))*pormap(elem(bedge(i,3),5)));
+        bflux(i)/(elemarea(bedge(i,3))*pormap(region(bedge(i,3))));
 end
 
 %--------------------------------------------------------------------------
@@ -30,24 +31,24 @@ end
 for i = 1:size(inedge,1)    
     if influx(i) >= 0
         C(inedge(i,3),inedge(i,3)) =  C(inedge(i,3),inedge(i,3)) - ...
-            influx(i)/(elemarea(inedge(i,3))*pormap(elem(inedge(i,3),5)));            
+            influx(i)/(elemarea(inedge(i,3))*pormap(region(inedge(i,3))));            
         C(inedge(i,4),inedge(i,3)) =  C(inedge(i,4),inedge(i,3)) + ...
-            influx(i)/(elemarea(inedge(i,4))*pormap(elem(inedge(i,4),5)));
+            influx(i)/(elemarea(inedge(i,4))*pormap(region(inedge(i,4))));
     else
         C(inedge(i,3),inedge(i,4)) =  C(inedge(i,3),inedge(i,4)) - ...
-            influx(i)/(elemarea(inedge(i,3))*pormap(elem(inedge(i,3),5)));
+            influx(i)/(elemarea(inedge(i,3))*pormap(region(inedge(i,3))));
         C(inedge(i,4),inedge(i,4)) =  C(inedge(i,4),inedge(i,4)) + ...
-            influx(i)/(elemarea(inedge(i,4))*pormap(elem(inedge(i,4),5)));   
+            influx(i)/(elemarea(inedge(i,4))*pormap(region(inedge(i,4))));   
     end    
 end 
 
 %Calculo termo fonte explicito
 for i=1:size(producelem,2)
-    Qprod = q(producelem(i))/(elemarea(producelem(i))*pormap(elem(producelem(i),5)));
+    Qprod = q(producelem(i))/(elemarea(producelem(i))*pormap(region(producelem(i))));
     C(producelem(i),producelem(i)) = C(producelem(i),producelem(i)) + Qprod;
 end
 for i=1:size(injecelem,2)
-    Qinj = q(injecelem(i))/(elemarea(injecelem(i))*pormap(elem(injecelem(i),5)));
+    Qinj = q(injecelem(i))/(elemarea(injecelem(i))*pormap(region(injecelem(i))));
     C(injecelem(i),injecelem(i)) = C(injecelem(i),injecelem(i)) + Qinj;
 end
 

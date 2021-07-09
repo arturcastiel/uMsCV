@@ -40,14 +40,10 @@ else
         if bedge(ifacont,5)==auxflag || bedge(ifacont,5)==102
             % calculo do fluxo fracional no contorno com saturação
             % prescrito
-            Krw2 = ((S_cont - satlimit(1))/(1-satlimit(1)-satlimit(2)))^nw;
-            
-            Kro2 = ((1 - S_cont - satlimit(1))/(1-satlimit(1)-satlimit(2)))^no;
-            
-            L2 = Krw2/visc(1) + Kro2/visc(2);
-            
-            f_cont = (Krw2/visc(1))/L2;
-            
+            Krw2 = ((S_cont - satlimit(1))/(1-satlimit(1)-satlimit(2)))^nw;          
+            Kro2 = ((1 - S_cont - satlimit(1))/(1-satlimit(1)-satlimit(2)))^no;            
+            L2 = Krw2/visc(1) + Kro2/visc(2);            
+            f_cont = (Krw2/visc(1))/L2;            
             RHS(lef) = RHS(lef) - f_cont * influx(ifacont);
         elseif bedge(ifacont,5)<200
             

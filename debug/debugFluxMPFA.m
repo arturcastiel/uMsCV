@@ -7,10 +7,10 @@ global intinterface inedge elemloc
 
 %flowMs = flowPms;
 %flowMs = flowPd;
-%flowMs = flowrate;
-
-flowMs = flowrate((size(bedge,1) +1):end) ;
 flowMs = flowrate;
+
+% flowMs = flowrate((size(bedge,1) +1):end) ;
+% flowMs = flowrate;
 
 acum = [];
 for index = 1:npar

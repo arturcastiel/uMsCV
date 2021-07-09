@@ -6,10 +6,8 @@ delt=1e50;
 dt_local=1e49;
 TOL=1e-12;
 for iface=1:(size(bedge,1)+size(inedge,1))
-    
-    
     if (size(bedge,1)<iface) % quando iface é maior que numero de faces de
-        % contorno quere dizer que pertece ao interior da malha. 
+        % contorno quere dizer que pertece ao interior da malha.
         lef=inedge(iface-size(bedge,1),3); % elemento a direita da face i
         rel=inedge(iface-size(bedge,1),4); % elemento a esquerda da face i
         A=norm(coord(inedge(iface-size(bedge,1),1),:)-coord(inedge(iface-size(bedge,1),2),:)); % comprimento dos baricentros adyacentes a face i
@@ -42,13 +40,13 @@ for iface=1:(size(bedge,1)+size(inedge,1))
                 f_cont= (Krw2/visc(1))/L2;
                 
                 alpha = abs((influx(iface)/A)*(f_cont-f_elem(lef))/(S_cont - S_old(lef)));
-                dt_local = abs((CFL/(2*n))*pormap(1)*dx/alpha); 
-%                 dt_local = abs((CFL/(2*order-1))*pormap(1)*dx/alpha); ##
-%                 original##
-%             
+                dt_local = abs((CFL/(2*n))*pormap(1)*dx/alpha);
+                %                 dt_local = abs((CFL/(2*order-1))*pormap(1)*dx/alpha); ##
+                %                 original##
+                %
             end
         end
-   
+        
     end
     
     if dt_local<delt
